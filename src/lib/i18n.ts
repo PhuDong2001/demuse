@@ -163,7 +163,7 @@ export interface TranslationSchema {
     sun: { short: string; full: string; letter: string };
   };
 
-  // Footer
+  // Footer & Sponsorship
   footerDesc: string;
   product: string;
   createAccount: string;
@@ -172,6 +172,9 @@ export interface TranslationSchema {
   encrypted: string;
   isolation: string;
   rights: string;
+  supportProject: string;
+  githubSponsors: string;
+  kofi: string;
 }
 
 export const translations: Record<Language, TranslationSchema> = {
@@ -335,6 +338,9 @@ export const translations: Record<Language, TranslationSchema> = {
     encrypted: "Phiên làm việc mã hóa",
     isolation: "Bảo mật dữ liệu cá nhân",
     rights: "Demuse Planner. Bản quyền đã được bảo lưu.",
+    supportProject: "Ủng hộ dự án",
+    githubSponsors: "GitHub Sponsors",
+    kofi: "Mời cà phê (Ko-fi)",
   },
 
   en: {
@@ -497,6 +503,9 @@ export const translations: Record<Language, TranslationSchema> = {
     encrypted: "Encrypted Sessions",
     isolation: "Tenant Data Isolation",
     rights: "Demuse Planner. All rights reserved.",
+    supportProject: "Support Project",
+    githubSponsors: "GitHub Sponsors",
+    kofi: "Buy me a coffee (Ko-fi)",
   },
 
   fr: {
@@ -659,6 +668,9 @@ export const translations: Record<Language, TranslationSchema> = {
     encrypted: "Sessions chiffrées",
     isolation: "Isolation des données",
     rights: "Demuse Planner. Tous droits réservés.",
+    supportProject: "Soutenir le projet",
+    githubSponsors: "GitHub Sponsors",
+    kofi: "M'offrir un café (Ko-fi)",
   },
 
   de: {
@@ -821,5 +833,8 @@ export const translations: Record<Language, TranslationSchema> = {
     encrypted: "Verschlüsselte Sitzungen",
     isolation: "Mandantentrennung",
     rights: "Demuse Planner. Alle Rechte vorbehalten.",
+    supportProject: "Projekt unterstützen",
+    githubSponsors: "GitHub Sponsors",
+    kofi: "Kaffee spendieren (Ko-fi)",
   },
 };

@@ -193,7 +193,8 @@ export function LandingPageClient() {
 
       {/* Footer */}
       <footer className="border-t border-[#e8e1d5] bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          {/* Main Footer Row */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#78716c]">
             <div className="flex items-center gap-2">
               <div className="relative h-6 w-6 rounded-md overflow-hidden border border-[#ded7c8] shrink-0">
@@ -209,13 +210,39 @@ export function LandingPageClient() {
               <span className="text-[#a8a29e]">· {t.footerDesc}</span>
             </div>
 
-            <div className="flex items-center gap-4 text-[#78716c]">
+            {/* Sponsorship Links */}
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#a8a29e]">
+                {t.supportProject}:
+              </span>
+              <a
+                href="https://github.com/sponsors/DongDuong2001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:text-[#1c1917] transition-colors text-xs font-medium text-[#57534e]"
+              >
+                <span>{t.githubSponsors}</span>
+              </a>
+              <a
+                href="https://ko-fi.com/dongphuduong"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:text-[#1c1917] transition-colors text-xs font-medium text-[#57534e]"
+              >
+                <span>{t.kofi}</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Bottom Security & Rights Bar */}
+          <div className="pt-4 border-t border-[#f0eae1] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#a8a29e]">
+            <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
                 <Lock className="h-3 w-3" />
                 {t.httpOnly}
               </span>
-              <span>© {new Date().getFullYear()} {t.rights}</span>
             </div>
+            <span>© {new Date().getFullYear()} {t.rights}</span>
           </div>
         </div>
       </footer>
