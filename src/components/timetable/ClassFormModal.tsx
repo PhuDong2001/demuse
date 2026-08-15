@@ -8,6 +8,7 @@ import { ColorPicker } from "../ui/ColorPicker";
 import { DAYS_OF_WEEK, CLASS_TYPES } from "@/lib/constants";
 import { checkTimeOverlap, type ScheduleWithSubject } from "@/lib/time";
 import { createClassAction, updateScheduleAction } from "@/actions/schedule.actions";
+import { updateSubjectAction } from "@/actions/subject.actions";
 import { AlertTriangle } from "reicon-react";
 import type { Subject } from "@/db/schema";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -158,6 +159,17 @@ function ClassFormInner({
 
     try {
       if (isEditing && editingSchedule) {
+        // 1. Update the parent subject metadata (name, code, teacher, room, color, note)
+        await updateSubjectAction(editingSchedule.subjectId, {
+          name,
+          code: code || undefined,
+          teacher: teacher || undefined,
+          room: room || undefined,
+          color,
+          note: note || undefined,
+        });
+
+        // 2. Update the schedule timing & slot properties
         await updateScheduleAction(editingSchedule.id, {
           dayOfWeek: selectedDays[0],
           startTime,
