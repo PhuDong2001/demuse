@@ -34,8 +34,21 @@ export function TimetableClient({
 
   const [selectedMobileDay, setSelectedMobileDay] = React.useState<number>(initialDay);
   const [showWeekends, setShowWeekends] = React.useState<boolean>(true);
-  const [viewMode, setViewMode] = React.useState<"timeline" | "cards">("timeline");
+  const [viewMode, setViewMode] = React.useState<"cards" | "timeline">("cards");
   const [searchQuery, setSearchQuery] = React.useState<string>("");
+
+  // Load preferred view from localStorage if set
+  React.useEffect(() => {
+    const saved = localStorage.getItem("demuse_view_mode");
+    if (saved === "timeline" || saved === "cards") {
+      setViewMode(saved);
+    }
+  }, []);
+
+  const handleToggleViewMode = (mode: "cards" | "timeline") => {
+    setViewMode(mode);
+    localStorage.setItem("demuse_view_mode", mode);
+  };
 
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = React.useState<boolean>(false);
@@ -133,23 +146,11 @@ export function TimetableClient({
 
         {/* View toggles (Desktop) */}
         <div className="hidden sm:flex items-center gap-2">
-          {/* View mode toggle: Timeline Grid vs Card Columns */}
+          {/* View mode toggle: Card Columns (Default) vs Timeline Grid */}
           <div className="flex items-center rounded-lg border border-[#ded7c8] bg-[#faf7f2] p-0.5 text-xs font-semibold">
             <button
               type="button"
-              onClick={() => setViewMode("timeline")}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                viewMode === "timeline"
-                  ? "bg-[#1c1917] text-[#faf7f2] shadow-2xs"
-                  : "text-[#78716c] hover:text-[#1c1917]"
-              }`}
-            >
-              <Calendar className="h-3 w-3" />
-              <span>{t.timeGridView}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("cards")}
+              onClick={() => handleToggleViewMode("cards")}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all cursor-pointer ${
                 viewMode === "cards"
                   ? "bg-[#1c1917] text-[#faf7f2] shadow-2xs"
@@ -158,6 +159,18 @@ export function TimetableClient({
             >
               <Sparkles className="h-3 w-3" />
               <span>{t.cardListView}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleToggleViewMode("timeline")}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                viewMode === "timeline"
+                  ? "bg-[#1c1917] text-[#faf7f2] shadow-2xs"
+                  : "text-[#78716c] hover:text-[#1c1917]"
+              }`}
+            >
+              <Calendar className="h-3 w-3" />
+              <span>{t.timeGridView}</span>
             </button>
           </div>
 

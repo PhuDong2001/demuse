@@ -24,10 +24,12 @@ export function ClassCard({
 
   return (
     <div
+      style={{
+        backgroundColor: color.bgHex,
+        borderColor: color.borderHex,
+      }}
       className={cn(
-        "group relative rounded-xl border transition-all text-left planner-interactive overflow-hidden",
-        color.bg,
-        color.border,
+        "group relative rounded-xl border transition-all text-left planner-interactive overflow-hidden shadow-2xs hover:shadow-xs",
         compact ? "p-2.5" : "p-3.5"
       )}
     >
@@ -123,9 +125,9 @@ export function ClassCard({
       {/* Subject Name */}
       <h4
         onClick={() => onEdit(schedule)}
+        style={{ color: color.textHex }}
         className={cn(
           "font-semibold leading-snug cursor-pointer hover:underline",
-          color.text,
           compact ? "text-xs" : "text-sm"
         )}
       >
