@@ -238,12 +238,18 @@ export function LandingPageClient() {
           </div>
 
           {/* Bottom Security & Rights Bar */}
-          <div className="pt-3 border-t border-[#f0eae1] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#a8a29e] text-center sm:text-left">
+          <div className="pt-3 border-t border-[#f0eae1] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#a8a29e] text-center sm:text-left">
             <div className="flex items-center justify-center gap-4">
               <span className="flex items-center gap-1">
                 <Lock className="h-3 w-3" />
                 {t.httpOnly}
               </span>
+              <Link href="/privacy" className="hover:text-[#1c1917] hover:underline transition-colors">
+                {t.privacyPolicy}
+              </Link>
+              <Link href="/terms" className="hover:text-[#1c1917] hover:underline transition-colors">
+                {t.termsOfService}
+              </Link>
             </div>
             <span>© {new Date().getFullYear()} {t.rights}</span>
           </div>

@@ -163,7 +163,7 @@ export interface TranslationSchema {
     sun: { short: string; full: string; letter: string };
   };
 
-  // Footer & Sponsorship
+  // Footer & Legal
   footerDesc: string;
   product: string;
   createAccount: string;
@@ -175,6 +175,8 @@ export interface TranslationSchema {
   supportProject: string;
   githubSponsors: string;
   kofi: string;
+  privacyPolicy: string;
+  termsOfService: string;
 }
 
 export const translations: Record<Language, TranslationSchema> = {
@@ -341,6 +343,8 @@ export const translations: Record<Language, TranslationSchema> = {
     supportProject: "Ủng hộ dự án",
     githubSponsors: "GitHub Sponsors",
     kofi: "Mời cà phê (Ko-fi)",
+    privacyPolicy: "Chính sách bảo mật",
+    termsOfService: "Điều khoản dịch vụ",
   },
 
   en: {
@@ -506,6 +510,8 @@ export const translations: Record<Language, TranslationSchema> = {
     supportProject: "Support Project",
     githubSponsors: "GitHub Sponsors",
     kofi: "Buy me a coffee (Ko-fi)",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
   },
 
   fr: {
@@ -671,6 +677,8 @@ export const translations: Record<Language, TranslationSchema> = {
     supportProject: "Soutenir le projet",
     githubSponsors: "GitHub Sponsors",
     kofi: "M'offrir un café (Ko-fi)",
+    privacyPolicy: "Politique de confidentialité",
+    termsOfService: "Conditions d'utilisation",
   },
 
   de: {
@@ -836,5 +844,7 @@ export const translations: Record<Language, TranslationSchema> = {
     supportProject: "Projekt unterstützen",
     githubSponsors: "GitHub Sponsors",
     kofi: "Kaffee spendieren (Ko-fi)",
+    privacyPolicy: "Datenschutzerklärung",
+    termsOfService: "Nutzungsbedingungen",
   },
 };
