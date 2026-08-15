@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Demuse
+
+Demuse is a modern, modular timetable and personal schedule management application built with Next.js App Router, React 19, TypeScript, TailwindCSS, and PostgreSQL (via Drizzle ORM).
+
+---
+
+## Features
+
+### Daily Timeline & Live Countdown
+- Real-time status indicators that detect whether a class is in session, upcoming, or completed for the day.
+- Displays classroom locations, instructors, and countdown durations.
+
+### Interactive Weekly Planner
+- Dual-view schedule interface supporting desktop weekly grid layouts and mobile daily agenda views.
+- Toggle between 5-day (Monday to Friday) and 7-day full-week views.
+- Real-time search filter for courses, rooms, and instructor names.
+
+### Real-Time Conflict Detection
+- Automatic detection and visual alerts when course time slots overlap.
+
+### Course & Subject Management
+- Subject catalog with customizable visual color palettes (Sage, Terracotta, Ochre, Slate, Rose, Pine).
+- Associate instructor details, default room assignments, course codes, and syllabus notes.
+
+### Secure Public Sharing
+- Cryptographically generated read-only shareable links for classmates, study groups, and academic advisors.
+- Instant access revocation and token regeneration.
+
+### Multilingual Support (i18n)
+- Built-in multi-language switcher supporting English, Vietnamese, French, and German across all pages, modals, and navigation.
+
+### Mobile-Optimized & Push Notifications
+- Progressive Web App (PWA) configuration with service worker support.
+- Configurable notification lead times (5, 10, 15, 30, 60 minutes) for mobile and desktop environments.
+
+---
+
+## Technology Stack
+
+- Framework: Next.js 16 (Turbopack, App Router, Server Actions)
+- Frontend: React 19, TailwindCSS v4, Reicon React
+- Database: PostgreSQL (Neon Serverless)
+- ORM: Drizzle ORM
+- Authentication: Stateless JWT in HTTPOnly Cookies (Jose, Argon2)
+- Schema Validation: Zod
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ or 20+
+- pnpm 9+
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/PhuDong2001/demuse.git
+cd demuse
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure environment variables:
+Create a `.env.local` file in the project root:
+```env
+DATABASE_URL=postgresql://user:password@host/database?sslmode=verify-full
+JWT_SECRET=your_long_random_jwt_secret_at_least_32_characters_long
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Push database schema:
+```bash
+pnpm db:push
+```
 
-## Learn More
+5. Start the development server:
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+The application will be accessible at `http://localhost:3000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Security
 
-## Deploy on Vercel
+- Authentication uses HTTPOnly, Secure, and SameSite strict/lax cookies to mitigate cross-site scripting (XSS) risks.
+- Client-side storage (`localStorage`) is restricted strictly to non-sensitive preferences like UI language choices.
+- Passwords are securely hashed with Argon2id prior to database persistence.
+- Public schedule access uses unpredictable UUID-based tokens with tenant isolation.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+Contributions are welcome. Please follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes following Conventional Commits format (`feat: ...`, `fix: ...`, `refactor: ...`).
+4. Ensure linting and build checks pass: `pnpm lint && pnpm build`
+5. Push to your branch and open a Pull Request.
+
+---
+
+## Code of Conduct
+
+All contributors and maintainers are expected to maintain a professional, respectful, and inclusive environment. Harassment, derogatory comments, or unprofessional behavior will not be tolerated.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
