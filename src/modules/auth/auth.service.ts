@@ -95,7 +95,7 @@ export async function registerUser(input: RegisterInput) {
   // 4. Create default Timetable & Notification Settings for new user
   await db.insert(timetables).values({
     userId: newUser.id,
-    name: "My Semester Timetable",
+    name: "My Weekly Timetable",
     description: "Personal academic timetable",
     academicTerm: "Current Term",
     isPublic: false,

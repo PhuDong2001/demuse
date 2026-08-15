@@ -51,8 +51,8 @@ export async function getDefaultTimetable(userId: string) {
       .insert(timetables)
       .values({
         userId,
-        name: "My Semester Timetable",
-        academicTerm: "Current Semester",
+        name: "My Weekly Timetable",
+        academicTerm: "Current Term",
         isPublic: false,
         isDefault: true,
         shareToken: generateShareToken(),
