@@ -55,7 +55,7 @@ export function WeekOverviewStrip({ schedules }: WeekOverviewStripProps) {
                   ? "bg-[#faf9f5] border-[#1c1917] ring-1 ring-[#1c1917]"
                   : daySchedules.length > 0
                   ? "bg-white border-[#ded7c8] hover:border-[#b8ad96] hover:bg-[#faf7f2]"
-                  : "bg-[#faf7f2]/50 border-[#ede8dc] opacity-60 hover:opacity-100"
+                  : "bg-white border-[#ded7c8] hover:border-[#b8ad96] hover:bg-[#faf7f2]"
               }`}
             >
               <div className="w-full">

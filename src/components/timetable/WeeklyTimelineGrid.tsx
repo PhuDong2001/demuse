@@ -127,11 +127,14 @@ export function WeeklyTimelineGrid({
             {/* Day Columns */}
             {days.map((day) => {
               const daySchedules = schedules.filter((s) => s.dayOfWeek === day.number);
+              const isWeekend = day.number === 6 || day.number === 7;
 
               return (
                 <div
                   key={day.number}
-                  className="relative border-r border-[#ded7c8] last:border-r-0 h-full group/col"
+                  className={`relative border-r border-[#ded7c8] last:border-r-0 h-full group/col transition-colors ${
+                    isWeekend ? "bg-[#faf8f4]/60" : "bg-white"
+                  }`}
                 >
                   {/* Horizontal Hour Guideline Rows */}
                   {hoursArray.map((hour, idx) => (
