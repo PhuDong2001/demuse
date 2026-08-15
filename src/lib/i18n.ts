@@ -67,6 +67,8 @@ export interface TranslationSchema {
   filterPlaceholder: string;
   fullWeek7Days: string;
   workDays5Days: string;
+  timeGridView: string;
+  cardListView: string;
   share: string;
   addCourse: string;
   noClassesOnDay: string;
@@ -241,6 +243,8 @@ export const translations: Record<Language, TranslationSchema> = {
     filterPlaceholder: "Tìm kiếm môn học, giảng viên, phòng...",
     fullWeek7Days: "7 ngày (Cả tuần)",
     workDays5Days: "5 ngày (Thứ 2 – Thứ 6)",
+    timeGridView: "Xem theo dòng thời gian (Lưới giờ)",
+    cardListView: "Xem theo thẻ danh sách",
     share: "Chia sẻ",
     addCourse: "Thêm môn học",
     noClassesOnDay: "Không có tiết học",
@@ -408,6 +412,8 @@ export const translations: Record<Language, TranslationSchema> = {
     filterPlaceholder: "Filter by subject, teacher, or room...",
     fullWeek7Days: "7 Days (Full Week)",
     workDays5Days: "5 Days (Mon–Fri)",
+    timeGridView: "Timeline Grid View",
+    cardListView: "Card List View",
     share: "Share",
     addCourse: "Add Course",
     noClassesOnDay: "No classes",
@@ -575,6 +581,8 @@ export const translations: Record<Language, TranslationSchema> = {
     filterPlaceholder: "Filtrer par matière, enseignant ou salle...",
     fullWeek7Days: "7 Jours (Semaine complète)",
     workDays5Days: "5 Jours (Lun–Ven)",
+    timeGridView: "Vue Grille Horaire",
+    cardListView: "Vue Liste Cartes",
     share: "Partager",
     addCourse: "Ajouter un cours",
     noClassesOnDay: "Pas de cours",
@@ -742,6 +750,8 @@ export const translations: Record<Language, TranslationSchema> = {
     filterPlaceholder: "Nach Fach, Dozent oder Raum filtern...",
     fullWeek7Days: "7 Tage (Ganze Woche)",
     workDays5Days: "5 Tage (Mo–Fr)",
+    timeGridView: "Zeitleisten-Rasteransicht",
+    cardListView: "Karten-Listenansicht",
     share: "Teilen",
     addCourse: "Fach hinzufügen",
     noClassesOnDay: "Keine Kurse",

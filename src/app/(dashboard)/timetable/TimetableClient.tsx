@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { WeeklyTimelineGrid } from "@/components/timetable/WeeklyTimelineGrid";
 import { WeeklyTimetableGrid } from "@/components/timetable/WeeklyTimetableGrid";
 import { MobileDayAgenda } from "@/components/timetable/MobileDayAgenda";
 import { ClassFormModal } from "@/components/timetable/ClassFormModal";
 import { ShareModal } from "@/components/timetable/ShareModal";
 import { Button } from "@/components/ui/Button";
-import { Plus, Share, Search, Sliders } from "reicon-react";
+import { Plus, Share, Search, Sliders, Calendar, Sparkles } from "reicon-react";
 import { getDemuseDayOfWeek, type ScheduleWithSubject } from "@/lib/time";
 import { duplicateScheduleAction, deleteScheduleAction } from "@/actions/schedule.actions";
 import type { Subject, Timetable } from "@/db/schema";
@@ -32,7 +33,8 @@ export function TimetableClient({
   const initialDay = Number(searchParams.get("day")) || getDemuseDayOfWeek(new Date());
 
   const [selectedMobileDay, setSelectedMobileDay] = React.useState<number>(initialDay);
-  const [showWeekends, setShowWeekends] = React.useState<boolean>(false);
+  const [showWeekends, setShowWeekends] = React.useState<boolean>(true);
+  const [viewMode, setViewMode] = React.useState<"timeline" | "cards">("timeline");
   const [searchQuery, setSearchQuery] = React.useState<string>("");
 
   // Modals
@@ -131,6 +133,34 @@ export function TimetableClient({
 
         {/* View toggles (Desktop) */}
         <div className="hidden sm:flex items-center gap-2">
+          {/* View mode toggle: Timeline Grid vs Card Columns */}
+          <div className="flex items-center rounded-lg border border-[#ded7c8] bg-[#faf7f2] p-0.5 text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setViewMode("timeline")}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                viewMode === "timeline"
+                  ? "bg-[#1c1917] text-[#faf7f2] shadow-2xs"
+                  : "text-[#78716c] hover:text-[#1c1917]"
+              }`}
+            >
+              <Calendar className="h-3 w-3" />
+              <span>{t.timeGridView}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("cards")}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                viewMode === "cards"
+                  ? "bg-[#1c1917] text-[#faf7f2] shadow-2xs"
+                  : "text-[#78716c] hover:text-[#1c1917]"
+              }`}
+            >
+              <Sparkles className="h-3 w-3" />
+              <span>{t.cardListView}</span>
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={() => setShowWeekends(!showWeekends)}
@@ -146,16 +176,27 @@ export function TimetableClient({
         </div>
       </div>
 
-      {/* Desktop Weekly Timetable Grid */}
+      {/* Desktop Weekly Timetable Grid (Timeline View vs Cards View) */}
       <div className="hidden md:block">
-        <WeeklyTimetableGrid
-          schedules={filteredSchedules}
-          onAddClassForDay={handleAddClass}
-          onEditClass={handleEditClass}
-          onDuplicateClass={handleDuplicate}
-          onDeleteClass={handleDelete}
-          showWeekends={showWeekends}
-        />
+        {viewMode === "timeline" ? (
+          <WeeklyTimelineGrid
+            schedules={filteredSchedules}
+            onAddClassForDay={handleAddClass}
+            onEditClass={handleEditClass}
+            onDuplicateClass={handleDuplicate}
+            onDeleteClass={handleDelete}
+            showWeekends={showWeekends}
+          />
+        ) : (
+          <WeeklyTimetableGrid
+            schedules={filteredSchedules}
+            onAddClassForDay={handleAddClass}
+            onEditClass={handleEditClass}
+            onDuplicateClass={handleDuplicate}
+            onDeleteClass={handleDelete}
+            showWeekends={showWeekends}
+          />
+        )}
       </div>
 
       {/* Mobile Day-by-Day Agenda */}
