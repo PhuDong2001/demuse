@@ -34,7 +34,7 @@ export function TimetableClient({
 
   const [selectedMobileDay, setSelectedMobileDay] = React.useState<number>(initialDay);
   const [showWeekends, setShowWeekends] = React.useState<boolean>(true);
-  const [viewMode, setViewMode] = React.useState<"cards" | "timeline">("cards");
+  const [viewMode, setViewMode] = React.useState<"cards" | "timeline">("timeline");
   const [searchQuery, setSearchQuery] = React.useState<string>("");
 
   // Load preferred view from localStorage if set
