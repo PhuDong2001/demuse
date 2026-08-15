@@ -36,13 +36,8 @@ export async function getScheduleById(scheduleId: string, userId: string) {
 
 export async function getTimetableSchedulesWithSubject(
   timetableId: string,
-  userId?: string
+  _userId?: string
 ): Promise<ScheduleWithSubject[]> {
-  // If userId is provided, verify ownership; if not, public view handles checking
-  if (userId) {
-    await getTimetableById(timetableId, userId);
-  }
-
   const allSubjects = await db.query.subjects.findMany({
     where: eq(subjects.timetableId, timetableId),
     with: {

@@ -5,10 +5,7 @@ import { NotFoundError, ForbiddenError } from "@/lib/errors";
 import { getTimetableById } from "../timetables/timetables.service";
 import type { CreateSubjectInput, UpdateSubjectInput } from "./subjects.schema";
 
-export async function getSubjectsByTimetable(timetableId: string, userId: string) {
-  // Ensure user owns timetable
-  await getTimetableById(timetableId, userId);
-
+export async function getSubjectsByTimetable(timetableId: string, _userId?: string) {
   return db.query.subjects.findMany({
     where: eq(subjects.timetableId, timetableId),
     orderBy: [desc(subjects.createdAt)],
