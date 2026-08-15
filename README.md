@@ -114,6 +114,15 @@ All contributors and maintainers are expected to maintain a professional, respec
 
 ---
 
+## Support & Sponsorship
+
+If you find Demuse useful and would like to support its ongoing development and maintenance, consider sponsoring the project:
+
+- GitHub Sponsors: [https://github.com/sponsors/DongDuong2001](https://github.com/sponsors/DongDuong2001)
+- Ko-fi: [https://ko-fi.com/dongphuduong](https://ko-fi.com/dongphuduong)
+
+---
+
 ## License
 
 This project is licensed under the MIT License.
