@@ -172,8 +172,9 @@ export function WeeklyTimelineGrid({
                         style={{
                           top: `${topPx}px`,
                           height: `${heightPx}px`,
-                          backgroundColor: color.bg,
-                          borderColor: color.border,
+                          backgroundColor: color.bgHex,
+                          borderColor: color.borderHex,
+                          color: color.textHex,
                         }}
                         className="absolute left-1 right-1 rounded-xl border p-2 text-left cursor-pointer shadow-xs transition-all hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between"
                       >
@@ -188,7 +189,7 @@ export function WeeklyTimelineGrid({
                           <div className="flex items-start justify-between gap-1">
                             <h4
                               className="text-xs font-semibold truncate leading-tight"
-                              style={{ color: color.text }}
+                              style={{ color: color.textHex }}
                             >
                               {schedule.subject.name}
                             </h4>

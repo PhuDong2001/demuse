@@ -7,6 +7,9 @@ export interface SubjectColor {
   badge: string;
   dot: string;
   accent: string;
+  bgHex: string;
+  borderHex: string;
+  textHex: string;
 }
 
 export const SUBJECT_COLORS: Record<string, SubjectColor> = {
@@ -19,6 +22,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#2d5234] text-white",
     dot: "#3b6b44",
     accent: "#3b6b44",
+    bgHex: "#edf4ee",
+    borderHex: "#b8d4bb",
+    textHex: "#244229",
   },
   terracotta: {
     id: "terracotta",
@@ -29,6 +35,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#793423] text-white",
     dot: "#96412c",
     accent: "#96412c",
+    bgHex: "#fbf0ec",
+    borderHex: "#eac7bb",
+    textHex: "#58271a",
   },
   ochre: {
     id: "ochre",
@@ -39,6 +48,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#74581c] text-white",
     dot: "#947023",
     accent: "#947023",
+    bgHex: "#faf5e8",
+    borderHex: "#eadcb9",
+    textHex: "#534015",
   },
   slate: {
     id: "slate",
@@ -49,6 +61,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#304e69] text-white",
     dot: "#3d6487",
     accent: "#3d6487",
+    bgHex: "#eef3f7",
+    borderHex: "#bed0de",
+    textHex: "#20374b",
   },
   "dusty-rose": {
     id: "dusty-rose",
@@ -59,6 +74,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#763341] text-white",
     dot: "#934051",
     accent: "#934051",
+    bgHex: "#faf0f2",
+    borderHex: "#eec8cf",
+    textHex: "#54252e",
   },
   pine: {
     id: "pine",
@@ -69,6 +87,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#28523b] text-white",
     dot: "#32684b",
     accent: "#32684b",
+    bgHex: "#e8f0eb",
+    borderHex: "#bed3c4",
+    textHex: "#1d3d2c",
   },
   amber: {
     id: "amber",
@@ -79,6 +100,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#794b1f] text-white",
     dot: "#985e26",
     accent: "#985e26",
+    bgHex: "#faf2ea",
+    borderHex: "#edd5bf",
+    textHex: "#573616",
   },
   indigo: {
     id: "indigo",
@@ -89,6 +113,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#37417e] text-white",
     dot: "#4754a2",
     accent: "#4754a2",
+    bgHex: "#eff1fa",
+    borderHex: "#cdd2f2",
+    textHex: "#272e59",
   },
   plum: {
     id: "plum",
@@ -99,6 +126,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#64306e] text-white",
     dot: "#7e3c8b",
     accent: "#7e3c8b",
+    bgHex: "#f6eff7",
+    borderHex: "#e1cde4",
+    textHex: "#47224e",
   },
   charcoal: {
     id: "charcoal",
@@ -109,6 +139,9 @@ export const SUBJECT_COLORS: Record<string, SubjectColor> = {
     badge: "bg-[#40434a] text-white",
     dot: "#535760",
     accent: "#535760",
+    bgHex: "#f2f2f3",
+    borderHex: "#d0d1d4",
+    textHex: "#2a2c30",
   },
 };
 
