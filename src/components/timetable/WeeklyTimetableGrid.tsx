@@ -30,7 +30,7 @@ export function WeeklyTimetableGrid({
 
   return (
     <div
-      className={`grid gap-3.5 w-full ${
+      className={`grid gap-2.5 sm:gap-3.5 w-full ${
         showWeekends
           ? "grid-cols-1 md:grid-cols-7"
           : "grid-cols-1 md:grid-cols-5"
@@ -45,7 +45,7 @@ export function WeeklyTimetableGrid({
         return (
           <div
             key={day.number}
-            className="flex flex-col rounded-2xl border border-[#ded7c8] bg-white p-3.5 shadow-2xs transition-all min-h-[480px]"
+            className="flex flex-col rounded-2xl border border-[#ded7c8] bg-white p-2.5 sm:p-3 shadow-2xs transition-all min-h-[360px]"
           >
             {/* Day Header */}
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#f0eae1]">

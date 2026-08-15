@@ -18,7 +18,7 @@ export default async function DashboardLayout({
         user={user}
         academicTerm={defaultTimetable?.academicTerm || "Spring 2026"}
       />
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12">
+      <main className="flex-1 max-w-[1536px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 pb-24 md:pb-12">
         {children}
       </main>
       <MobileBottomNav />
