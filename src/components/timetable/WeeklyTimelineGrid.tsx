@@ -190,8 +190,9 @@ export function WeeklyTimelineGrid({
                           {/* Subject Name & Actions */}
                           <div className="flex items-start justify-between gap-1">
                             <h4
-                              className="text-[11px] font-semibold truncate leading-tight"
+                              className="text-[11px] font-semibold line-clamp-2 leading-tight break-words"
                               style={{ color: color.textHex }}
+                              title={schedule.subject.name}
                             >
                               {schedule.subject.name}
                             </h4>
