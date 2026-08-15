@@ -24,11 +24,17 @@ export function minutesToTime(minutes: number): string {
 }
 
 /**
- * Formats "09:30" to "9:30 AM" or keeps "09:30" for 24h.
+ * Formats "09:30" to 24-hour display "09:30" or 12-hour "9:30 AM" if specified.
  */
-export function formatTimeDisplay(timeStr: string, is24Hour: boolean = false): string {
+export function formatTimeDisplay(timeStr: string, is24Hour: boolean = true): string {
   if (!timeStr) return "";
-  if (is24Hour) return timeStr;
+  if (is24Hour) {
+    const parts = timeStr.split(":");
+    if (parts.length >= 2) {
+      return `${parts[0].padStart(2, "0")}:${parts[1].padStart(2, "0")}`;
+    }
+    return timeStr;
+  }
 
   const totalMinutes = timeToMinutes(timeStr);
   const hours24 = Math.floor(totalMinutes / 60);

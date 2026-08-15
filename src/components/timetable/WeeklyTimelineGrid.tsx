@@ -38,10 +38,7 @@ export function WeeklyTimelineGrid({
   const hoursArray = Array.from({ length: TOTAL_HOURS + 1 }, (_, i) => START_HOUR + i);
 
   const formatHourLabel = (hour: number) => {
-    if (hour === 0 || hour === 24) return "12 AM";
-    if (hour === 12) return "12 PM";
-    if (hour < 12) return `${hour} AM`;
-    return `${hour - 12} PM`;
+    return `${hour.toString().padStart(2, "0")}:00`;
   };
 
   return (
