@@ -28,29 +28,40 @@ export function WeeklyTimelineGrid({
   const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
   const days = showWeekends ? DAYS_OF_WEEK : DAYS_OF_WEEK.slice(0, 5);
 
-  // Time Axis: from 6:00 (360 mins) to 22:00 (1320 mins)
-  const START_HOUR = 6;
-  const END_HOUR = 22;
+  // Full 24-Hour Day: from 00:00 to 24:00 (24 hours)
+  const START_HOUR = 0;
+  const END_HOUR = 24;
   const TOTAL_HOURS = END_HOUR - START_HOUR;
-  const HOUR_HEIGHT = 64; // px per hour
+  const HOUR_HEIGHT = 60; // 60px per hour = 1px per minute
   const TOTAL_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT;
 
   const hoursArray = Array.from({ length: TOTAL_HOURS + 1 }, (_, i) => START_HOUR + i);
 
-  const formatHourLabel = (hour: number) => {
-    return `${hour.toString().padStart(2, "0")}:00`;
-  };
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to morning view (e.g. 06:00) on initial render
+  React.useEffect(() => {
+    if (scrollContainerRef.current) {
+      // 6:00 is 6 * 60px = 360px
+      scrollContainerRef.current.scrollTop = 360;
+    }
+  }, []);
 
   return (
     <div className="w-full rounded-2xl border border-[#ded7c8] bg-white shadow-xs overflow-hidden">
-      {/* Scrollable Container */}
-      <div className="overflow-x-auto">
-        <div className="min-w-[760px]">
-          {/* Header Row: Days of Week */}
-          <div className="grid border-b border-[#ded7c8] bg-[#faf7f2]/90 sticky top-0 z-20"
-               style={{ gridTemplateColumns: `64px repeat(${days.length}, minmax(0, 1fr))` }}>
-            {/* Top-left empty corner */}
-            <div className="h-12 border-r border-[#ded7c8] flex items-center justify-center text-[11px] font-semibold text-[#8c8275]">
+      {/* Scrollable Container with fixed height for full day scrolling */}
+      <div
+        ref={scrollContainerRef}
+        className="overflow-x-auto overflow-y-auto max-h-[750px] relative scroll-smooth"
+      >
+        <div className="min-w-[780px]">
+          {/* Sticky Header Row: Days of Week */}
+          <div
+            className="grid border-b border-[#ded7c8] bg-[#faf7f2]/95 backdrop-blur-md sticky top-0 z-30 shadow-2xs"
+            style={{ gridTemplateColumns: `64px repeat(${days.length}, minmax(0, 1fr))` }}
+          >
+            {/* Top-left icon header */}
+            <div className="h-12 border-r border-[#ded7c8] flex items-center justify-center text-[11px] font-semibold text-[#8c8275] bg-[#faf7f2]">
               <Clock className="h-4 w-4" />
             </div>
 
@@ -62,7 +73,7 @@ export function WeeklyTimelineGrid({
               return (
                 <div
                   key={day.number}
-                  className="h-12 px-2 border-r border-[#ded7c8] last:border-r-0 flex items-center justify-between"
+                  className="h-12 px-2.5 border-r border-[#ded7c8] last:border-r-0 flex items-center justify-between"
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
                     <span className="text-xs font-bold text-[#1c1917] truncate">
@@ -90,23 +101,27 @@ export function WeeklyTimelineGrid({
 
           {/* Grid Body with Time Labels + Columns */}
           <div
-            className="relative grid"
+            className="relative grid bg-white"
             style={{
               gridTemplateColumns: `64px repeat(${days.length}, minmax(0, 1fr))`,
               height: `${TOTAL_HEIGHT}px`,
             }}
           >
             {/* Time Axis Column */}
-            <div className="relative border-r border-[#ded7c8] bg-[#faf7f2]/40 select-none">
-              {hoursArray.map((hour, idx) => (
-                <div
-                  key={hour}
-                  className="absolute left-0 right-0 -translate-y-1/2 pr-2 text-right text-[11px] font-medium text-[#8c8275]"
-                  style={{ top: `${idx * HOUR_HEIGHT}px` }}
-                >
-                  {formatHourLabel(hour)}
-                </div>
-              ))}
+            <div className="relative border-r border-[#ded7c8] bg-[#faf7f2]/50 select-none">
+              {hoursArray.map((hour, idx) => {
+                const hourFormatted = `${hour.toString().padStart(2, "0")}:00`;
+                // Center the text vertically across the line without being cut off
+                return (
+                  <div
+                    key={hour}
+                    className="absolute left-0 right-0 -translate-y-1/2 pr-2 text-right text-[11px] font-semibold text-[#8c8275]"
+                    style={{ top: `${idx * HOUR_HEIGHT}px` }}
+                  >
+                    {hourFormatted}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Day Columns */}
@@ -127,7 +142,7 @@ export function WeeklyTimelineGrid({
                     />
                   ))}
 
-                  {/* Half-hour dashed guide */}
+                  {/* Half-hour dashed guide (Every 30 minutes) */}
                   {hoursArray.slice(0, -1).map((hour, idx) => (
                     <div
                       key={`half-${hour}`}
@@ -142,11 +157,9 @@ export function WeeklyTimelineGrid({
                     const endMin = timeToMinutes(schedule.endTime);
                     const color = getSubjectColor(schedule.subject.color);
 
-                    // Clamp to visible window
-                    const topMin = Math.max(startMin - START_HOUR * 60, 0);
+                    // Exact 1px per minute placement
+                    const topPx = (startMin / 60) * HOUR_HEIGHT;
                     const durationMin = Math.max(endMin - startMin, 30);
-
-                    const topPx = (topMin / 60) * HOUR_HEIGHT;
                     const heightPx = Math.max((durationMin / 60) * HOUR_HEIGHT - 2, 38);
 
                     return (
@@ -159,11 +172,11 @@ export function WeeklyTimelineGrid({
                           backgroundColor: color.bg,
                           borderColor: color.border,
                         }}
-                        className="absolute left-1 right-1 rounded-xl border p-2 text-left cursor-pointer shadow-xs transition-all hover:shadow-md hover:z-30 group overflow-hidden flex flex-col justify-between"
+                        className="absolute left-1 right-1 rounded-xl border p-2 text-left cursor-pointer shadow-xs transition-all hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between"
                       >
                         {/* Left solid color accent bar */}
                         <div
-                          className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl"
+                          className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-xl"
                           style={{ backgroundColor: color.accent }}
                         />
 
@@ -178,14 +191,14 @@ export function WeeklyTimelineGrid({
                             </h4>
 
                             {/* Quick Action Icons on Hover */}
-                            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 bg-white/80 rounded px-1 -mr-1 -mt-0.5">
+                            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 bg-white/90 rounded px-1 -mr-1 -mt-0.5 border border-black/5 shadow-2xs">
                               <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onEditClass(schedule);
                                 }}
-                                className="p-0.5 text-[#57534e] hover:text-[#1c1917]"
+                                className="p-0.5 text-[#57534e] hover:text-[#1c1917] transition-colors"
                                 title="Edit"
                               >
                                 <Edit2 className="h-3 w-3" />
@@ -196,7 +209,7 @@ export function WeeklyTimelineGrid({
                                   e.stopPropagation();
                                   onDuplicateClass(schedule.id);
                                 }}
-                                className="p-0.5 text-[#57534e] hover:text-[#1c1917]"
+                                className="p-0.5 text-[#57534e] hover:text-[#1c1917] transition-colors"
                                 title="Duplicate"
                               >
                                 <Copy className="h-3 w-3" />
@@ -207,7 +220,7 @@ export function WeeklyTimelineGrid({
                                   e.stopPropagation();
                                   onDeleteClass(schedule.id);
                                 }}
-                                className="p-0.5 text-red-600 hover:text-red-800"
+                                className="p-0.5 text-red-600 hover:text-red-800 transition-colors"
                                 title="Delete"
                               >
                                 <Trash2 className="h-3 w-3" />
@@ -215,7 +228,7 @@ export function WeeklyTimelineGrid({
                             </div>
                           </div>
 
-                          {/* Time info */}
+                          {/* 24-Hour Time info */}
                           <div
                             className="flex items-center gap-1 text-[11px] font-medium leading-none"
                             style={{ color: color.text }}
