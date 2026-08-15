@@ -28,27 +28,40 @@ export function WeeklyTimelineGrid({
   const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
   const days = showWeekends ? DAYS_OF_WEEK : DAYS_OF_WEEK.slice(0, 5);
 
-  // Spacious Full-Height Timeline Grid: 60px per hour, from 06:00 to 22:00
+  // Balanced "To Vừa Vừa" Timeline Grid: 50px per hour, from 06:00 to 22:00
   const START_HOUR = 6;
   const END_HOUR = 22;
   const TOTAL_HOURS = END_HOUR - START_HOUR;
-  const HOUR_HEIGHT = 60; // Spacious 60px per hour
+  const HOUR_HEIGHT = 50; // Balanced 50px (not too small, not too tall)
   const TOTAL_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT;
 
   const hoursArray = Array.from({ length: TOTAL_HOURS + 1 }, (_, i) => START_HOUR + i);
 
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to 06:30 morning position on mount
+  React.useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, []);
+
   return (
     <div className="w-full rounded-2xl border border-[#ded7c8] bg-white shadow-xs overflow-hidden">
-      {/* Scrollable Container */}
-      <div className="overflow-x-auto relative">
-        <div className="min-w-[800px]">
+      {/* Scrollable Container with explicit max-height and macOS smooth scrolling */}
+      <div
+        ref={scrollRef}
+        className="overflow-x-auto overflow-y-auto max-h-[620px] sm:max-h-[680px] relative scroll-smooth overscroll-contain"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
+        <div className="min-w-[780px]">
           {/* Header Row: Days of Week */}
           <div
             className="grid border-b border-[#ded7c8] bg-[#faf7f2]/95 backdrop-blur-md sticky top-0 z-30 shadow-2xs"
-            style={{ gridTemplateColumns: `60px repeat(${days.length}, minmax(0, 1fr))` }}
+            style={{ gridTemplateColumns: `56px repeat(${days.length}, minmax(0, 1fr))` }}
           >
             {/* Top-left icon header */}
-            <div className="h-11 border-r border-[#ded7c8] flex items-center justify-center text-[11px] font-semibold text-[#8c8275] bg-[#faf7f2]">
+            <div className="h-10 border-r border-[#ded7c8] flex items-center justify-center text-[11px] font-semibold text-[#8c8275] bg-[#faf7f2]">
               <Clock className="h-4 w-4" />
             </div>
 
@@ -61,7 +74,7 @@ export function WeeklyTimelineGrid({
               return (
                 <div
                   key={day.number}
-                  className={`h-11 px-3 border-r border-[#ded7c8] last:border-r-0 flex items-center justify-between transition-colors ${
+                  className={`h-10 px-2.5 border-r border-[#ded7c8] last:border-r-0 flex items-center justify-between transition-colors ${
                     isWeekend ? "bg-[#f5efe3]/60" : "bg-[#faf7f2]"
                   }`}
                 >
@@ -70,7 +83,7 @@ export function WeeklyTimelineGrid({
                       {dayTrans ? dayTrans.full : day.full}
                     </span>
                     {count > 0 && (
-                      <span className="h-4 min-w-[16px] px-1 rounded-full bg-[#ede8dc] text-[10px] font-bold text-[#57534e] flex items-center justify-center">
+                      <span className="h-4 min-w-[15px] px-1 rounded-full bg-[#ede8dc] text-[10px] font-bold text-[#57534e] flex items-center justify-center">
                         {count}
                       </span>
                     )}
@@ -93,7 +106,7 @@ export function WeeklyTimelineGrid({
           <div
             className="relative grid bg-white"
             style={{
-              gridTemplateColumns: `60px repeat(${days.length}, minmax(0, 1fr))`,
+              gridTemplateColumns: `56px repeat(${days.length}, minmax(0, 1fr))`,
               height: `${TOTAL_HEIGHT}px`,
             }}
           >
@@ -104,7 +117,7 @@ export function WeeklyTimelineGrid({
                 return (
                   <div
                     key={hour}
-                    className="absolute left-0 right-0 -translate-y-1/2 pr-2 text-right text-[11px] font-semibold text-[#8c8275]"
+                    className="absolute left-0 right-0 -translate-y-1/2 pr-2 text-right text-[10px] font-semibold text-[#8c8275]"
                     style={{ top: `${idx * HOUR_HEIGHT}px` }}
                   >
                     {hourFormatted}
@@ -154,7 +167,7 @@ export function WeeklyTimelineGrid({
 
                     const topPx = ((clampedStart - START_HOUR * 60) / 60) * HOUR_HEIGHT;
                     const durationMin = Math.max(clampedEnd - clampedStart, 30);
-                    const heightPx = Math.max((durationMin / 60) * HOUR_HEIGHT - 2, 36);
+                    const heightPx = Math.max((durationMin / 60) * HOUR_HEIGHT - 2, 34);
 
                     return (
                       <div
@@ -167,7 +180,7 @@ export function WeeklyTimelineGrid({
                           borderColor: color.borderHex,
                           color: color.textHex,
                         }}
-                        className="absolute left-1 right-1 rounded-xl border p-2.5 text-left cursor-pointer shadow-xs transition-all hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between"
+                        className="absolute left-1 right-1 rounded-xl border p-2 text-left cursor-pointer shadow-xs transition-all hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between"
                       >
                         {/* Left solid color accent bar */}
                         <div
@@ -175,7 +188,7 @@ export function WeeklyTimelineGrid({
                           style={{ backgroundColor: color.accent }}
                         />
 
-                        <div className="pl-1.5 space-y-1 min-w-0">
+                        <div className="pl-1.5 space-y-0.5 min-w-0">
                           {/* Subject Name & Actions */}
                           <div className="flex items-start justify-between gap-1">
                             <h4
