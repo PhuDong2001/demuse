@@ -1,0 +1,200 @@
+"use client";
+
+import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { WeeklyTimetableGrid } from "@/components/timetable/WeeklyTimetableGrid";
+import { MobileDayAgenda } from "@/components/timetable/MobileDayAgenda";
+import { ClassFormModal } from "@/components/timetable/ClassFormModal";
+import { ShareModal } from "@/components/timetable/ShareModal";
+import { Button } from "@/components/ui/Button";
+import { Plus, Share, Search, Sliders } from "reicon-react";
+import { getDemuseDayOfWeek, type ScheduleWithSubject } from "@/lib/time";
+import { duplicateScheduleAction, deleteScheduleAction } from "@/actions/schedule.actions";
+import type { Subject, Timetable } from "@/db/schema";
+import { useLanguage } from "@/lib/LanguageContext";
+
+interface TimetableClientProps {
+  timetable: Timetable;
+  subjects: Subject[];
+  schedules: ScheduleWithSubject[];
+}
+
+export function TimetableClient({
+  timetable,
+  subjects,
+  schedules,
+}: TimetableClientProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { t } = useLanguage();
+
+  // Initial day from query params or current day
+  const initialDay = Number(searchParams.get("day")) || getDemuseDayOfWeek(new Date());
+
+  const [selectedMobileDay, setSelectedMobileDay] = React.useState<number>(initialDay);
+  const [showWeekends, setShowWeekends] = React.useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = React.useState<string>("");
+
+  // Modals
+  const [isAddModalOpen, setIsAddModalOpen] = React.useState<boolean>(false);
+  const [isShareModalOpen, setIsShareModalOpen] = React.useState<boolean>(false);
+  const [editingSchedule, setEditingSchedule] = React.useState<ScheduleWithSubject | null>(null);
+  const [modalDefaultDay, setModalDefaultDay] = React.useState<number>(1);
+
+  // Filter schedules based on search query
+  const filteredSchedules = React.useMemo(() => {
+    if (!searchQuery.trim()) return schedules;
+    const q = searchQuery.toLowerCase().trim();
+    return schedules.filter(
+      (s) =>
+        s.subject.name.toLowerCase().includes(q) ||
+        (s.subject.code && s.subject.code.toLowerCase().includes(q)) ||
+        (s.subject.teacher && s.subject.teacher.toLowerCase().includes(q)) ||
+        (s.room && s.room.toLowerCase().includes(q)) ||
+        (s.subject.room && s.subject.room.toLowerCase().includes(q))
+    );
+  }, [schedules, searchQuery]);
+
+  const handleAddClass = (dayNumber: number) => {
+    setEditingSchedule(null);
+    setModalDefaultDay(dayNumber);
+    setIsAddModalOpen(true);
+  };
+
+  const handleEditClass = (sch: ScheduleWithSubject) => {
+    setEditingSchedule(sch);
+    setModalDefaultDay(sch.dayOfWeek);
+    setIsAddModalOpen(true);
+  };
+
+  const handleDuplicate = async (schId: string) => {
+    await duplicateScheduleAction(schId);
+    router.refresh();
+  };
+
+  const handleDelete = async (schId: string) => {
+    if (confirm(t.confirmDeleteClass)) {
+      await deleteScheduleAction(schId);
+      router.refresh();
+    }
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-300">
+      {/* Timetable Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#f0eae1]">
+        <div>
+          <h1 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#1c1917]">
+            {timetable.name}
+          </h1>
+          <p className="text-xs text-[#78716c] mt-0.5">
+            {timetable.academicTerm || t.currentTerm} · {schedules.length} {t.weeklySessions}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setIsShareModalOpen(true)}
+            className="gap-1.5 shadow-2xs"
+          >
+            <Share className="h-3.5 w-3.5" />
+            <span>{t.share}</span>
+          </Button>
+
+          <Button
+            size="sm"
+            variant="primary"
+            onClick={() => handleAddClass(selectedMobileDay)}
+            className="gap-1.5 shadow-2xs"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>{t.addClass}</span>
+          </Button>
+        </div>
+      </div>
+
+      {/* Control Bar: Search & View Options */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-[#ded7c8]">
+        {/* Search input */}
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#a8a29e]" />
+          <input
+            type="text"
+            placeholder={t.filterPlaceholder}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-[#ded7c8] bg-[#faf7f2] focus:bg-white focus:border-[#1c1917] focus:outline-none transition-colors"
+          />
+        </div>
+
+        {/* View toggles (Desktop) */}
+        <div className="hidden sm:flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowWeekends(!showWeekends)}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
+              showWeekends
+                ? "bg-[#1c1917] text-[#faf7f2] border-[#1c1917]"
+                : "bg-white text-[#57534e] border-[#ded7c8] hover:bg-[#faf7f2]"
+            }`}
+          >
+            <Sliders className="h-3 w-3" />
+            <span>{showWeekends ? t.fullWeek7Days : t.workDays5Days}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Weekly Timetable Grid */}
+      <div className="hidden md:block">
+        <WeeklyTimetableGrid
+          schedules={filteredSchedules}
+          onAddClassForDay={handleAddClass}
+          onEditClass={handleEditClass}
+          onDuplicateClass={handleDuplicate}
+          onDeleteClass={handleDelete}
+          showWeekends={showWeekends}
+        />
+      </div>
+
+      {/* Mobile Day-by-Day Agenda */}
+      <div className="block md:hidden">
+        <MobileDayAgenda
+          schedules={filteredSchedules}
+          selectedDay={selectedMobileDay}
+          onSelectDay={setSelectedMobileDay}
+          onAddClassForDay={handleAddClass}
+          onEditClass={handleEditClass}
+          onDuplicateClass={handleDuplicate}
+          onDeleteClass={handleDelete}
+        />
+      </div>
+
+      {/* Class Form Modal */}
+      <ClassFormModal
+        isOpen={isAddModalOpen}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          setEditingSchedule(null);
+        }}
+        timetableId={timetable.id}
+        existingSubjects={subjects}
+        allSchedules={schedules}
+        editingSchedule={editingSchedule}
+        defaultDayOfWeek={modalDefaultDay}
+        onSuccess={() => router.refresh()}
+      />
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        timetableId={timetable.id}
+        isPublic={timetable.isPublic}
+        shareToken={timetable.shareToken}
+        onUpdate={() => router.refresh()}
+      />
+    </div>
+  );
+}
