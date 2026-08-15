@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --paper-bg: #faf7f2;
+    --paper-card: #ffffff;
+    --paper-subtle: #f3efe6;
+    --paper-border: #e6dfd1;
+    --paper-border-strong: #d2c8b5;
+    
+    --ink-primary: #1c1917;
+    --ink-secondary: #57534e;
+    --ink-muted: #8d857a;
+    --ink-faint: #b8b0a4;
+
+    --brand-primary: #292524;
+    --brand-accent: #854d0e;
+  }
+
+  body {
+    background-color: var(--paper-bg);
+    color: var(--ink-primary);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Editorial planner styling */
+.planner-card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-border);
+  box-shadow: 0 1px 3px 0 rgba(28, 25, 23, 0.03), 0 1px 2px -1px rgba(28, 25, 23, 0.03);
+}
+
+.planner-card-subtle {
+  background: var(--paper-subtle);
+  border: 1px solid var(--paper-border);
+}
+
+.planner-interactive {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.planner-interactive:hover {
+  border-color: var(--paper-border-strong);
+  box-shadow: 0 4px 6px -1px rgba(28, 25, 23, 0.06), 0 2px 4px -2px rgba(28, 25, 23, 0.04);
+}
+
+/* Custom minimal scrollbar for timetable grid */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6cfbf;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b5ac99;
+}
+
+/* Pulse animation for live countdown marker */
+@keyframes softPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+.pulse-marker {
+  animation: softPulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-marker {
+    animation: none;
+  }
+  .planner-interactive {
+    transition: none;
+  }
 }
