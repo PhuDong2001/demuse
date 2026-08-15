@@ -66,17 +66,32 @@ export function DashboardClient({
     day: "numeric",
   });
 
+  // Pick a random quote on mount / render
+  const [randomQuote, setRandomQuote] = React.useState<string>("");
+
+  React.useEffect(() => {
+    if (t.quotes && t.quotes.length > 0) {
+      const idx = Math.floor(Math.random() * t.quotes.length);
+      setRandomQuote(t.quotes[idx]);
+    }
+  }, [language, t.quotes]);
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Welcome & Date Header */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-1 border-b border-[#f0eae1]">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 pb-2 border-b border-[#f0eae1]">
+        <div className="space-y-0.5">
           <span className="text-xs font-semibold uppercase tracking-wider text-[#78716c]">
             {todayFormatted}
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#1c1917] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#1c1917]">
             {t.goodDay}, {user.name.split(" ")[0]}
           </h1>
+          {randomQuote && (
+            <p className="text-xs sm:text-sm text-[#78716c] italic pt-0.5 font-serif max-w-xl">
+              “{randomQuote}”
+            </p>
+          )}
         </div>
 
         <div className="flex items-center gap-2">

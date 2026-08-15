@@ -34,6 +34,7 @@ export interface TranslationSchema {
 
   // Next Class Hero & Dashboard
   goodDay: string;
+  quotes: string[];
   classInSession: string;
   upNext: string;
   allClassesFinished: string;
@@ -213,6 +214,15 @@ export const translations: Record<Language, TranslationSchema> = {
     ctaButton: "Tạo tài khoản miễn phí",
 
     goodDay: "Xin chào",
+    quotes: [
+      "Mỗi ngày là một cơ hội mới để học thêm điều tuyệt vời.",
+      "Hành trình vạn dặm luôn bắt đầu bằng một bước chân nhỏ.",
+      "Kiên trì và tập trung sẽ biến mục tiêu thành kết quả xứng đáng.",
+      "Chúc bạn một ngày học tập tràn đầy năng lượng và hiệu quả.",
+      "Không có lối tắt nào đến thành công ngoài việc nỗ lực mỗi ngày.",
+      "Từng giờ học hôm nay đang xây dựng tương lai tươi sáng của bạn.",
+      "Hãy giữ tâm trí thư thái và đón nhận những kiến thức mới nhé.",
+    ],
     classInSession: "Đang trong giờ học",
     upNext: "Tiết tiếp theo",
     allClassesFinished: "Đã hoàn thành các tiết học hôm nay",
@@ -382,6 +392,15 @@ export const translations: Record<Language, TranslationSchema> = {
     ctaButton: "Create Free Account",
 
     goodDay: "Good day",
+    quotes: [
+      "Every day is a fresh opportunity to learn and grow.",
+      "Small daily efforts compound into extraordinary achievements.",
+      "Focus on the present moment; your future self will thank you.",
+      "Wishing you a productive, calm, and insightful study session.",
+      "Consistency is the quiet secret to mastering any craft.",
+      "Take learning one step at a time with confidence and curiosity.",
+      "Believe in your progress, celebrate small wins along the way.",
+    ],
     classInSession: "Class in session",
     upNext: "Up next",
     allClassesFinished: "All classes finished today",
@@ -551,6 +570,14 @@ export const translations: Record<Language, TranslationSchema> = {
     ctaButton: "Créer un compte gratuit",
 
     goodDay: "Bonjour",
+    quotes: [
+      "Chaque jour est une nouvelle opportunité d'apprendre.",
+      "Les petits efforts quotidiens créent de grandes réussites.",
+      "Restez concentré et profitez de chaque moment d'apprentissage.",
+      "Nous vous souhaitons une excellente journée d'étude et de réussite.",
+      "La persévérance est la clé de la maîtrise de toute discipline.",
+      "Avancez avec curiosité, confiance et sérénité aujourd'hui.",
+    ],
     classInSession: "Cours en cours",
     upNext: "Prochain cours",
     allClassesFinished: "Tous les cours sont terminés aujourd'hui",
@@ -720,6 +747,14 @@ export const translations: Record<Language, TranslationSchema> = {
     ctaButton: "Kostenloses Konto erstellen",
 
     goodDay: "Guten Tag",
+    quotes: [
+      "Jeder Tag bietet eine neue Gelegenheit zu lernen und zu wachsen.",
+      "Kleine tägliche Schritte führen zu bemerkenswerten Erfolgen.",
+      "Konzentration und Ruhe machen jede Lerneinheit wirkungsvoll.",
+      "Wir wünschen Ihnen einen produktiven und erfolgreichen Lerntag.",
+      "Beständigkeit ist der Schlüssel zur Meisterschaft.",
+      "Gehen Sie mit Zuversicht und Neugier an Ihre heutigen Kurse heran.",
+    ],
     classInSession: "Kurs läuft gerade",
     upNext: "Als Nächstes",
     allClassesFinished: "Alle Kurse für heute beendet",
