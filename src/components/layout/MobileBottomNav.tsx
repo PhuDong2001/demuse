@@ -36,7 +36,7 @@ export function MobileBottomNav({ onOpenAddModal }: MobileBottomNavProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center w-16 py-1 rounded-xl transition-all",
+                "flex flex-col items-center justify-center flex-1 max-w-[72px] py-1 rounded-xl transition-all",
                 isActive
                   ? "text-[#1c1917] font-semibold"
                   : "text-[#78716c] hover:text-[#1c1917]"
@@ -48,7 +48,9 @@ export function MobileBottomNav({ onOpenAddModal }: MobileBottomNavProps) {
                   isActive ? "stroke-[2.5]" : "stroke-[1.75]"
                 )}
               />
-              <span className="text-[10px] tracking-tight">{item.label}</span>
+              <span className="text-[10px] tracking-tight whitespace-nowrap leading-none">
+                {item.label}
+              </span>
             </Link>
           );
         })}
@@ -76,7 +78,7 @@ export function MobileBottomNav({ onOpenAddModal }: MobileBottomNavProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center w-16 py-1 rounded-xl transition-all",
+                "flex flex-col items-center justify-center flex-1 max-w-[72px] py-1 rounded-xl transition-all",
                 isActive
                   ? "text-[#1c1917] font-semibold"
                   : "text-[#78716c] hover:text-[#1c1917]"
@@ -88,7 +90,9 @@ export function MobileBottomNav({ onOpenAddModal }: MobileBottomNavProps) {
                   isActive ? "stroke-[2.5]" : "stroke-[1.75]"
                 )}
               />
-              <span className="text-[10px] tracking-tight">{item.label}</span>
+              <span className="text-[10px] tracking-tight whitespace-nowrap leading-none">
+                {item.label}
+              </span>
             </Link>
           );
         })}

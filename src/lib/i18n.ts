@@ -185,7 +185,7 @@ export interface TranslationSchema {
 export const translations: Record<Language, TranslationSchema> = {
   vi: {
     today: "Hôm nay",
-    timetable: "Thời khóa biểu",
+    timetable: "Lịch tuần",
     courses: "Môn học",
     settings: "Cài đặt",
     addClass: "Thêm tiết",

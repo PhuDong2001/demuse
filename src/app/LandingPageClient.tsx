@@ -297,120 +297,90 @@ export function LandingPageClient() {
         </section>
       </main>
 
-      {/* Redesigned Footer with Creators and Links */}
+      {/* Professional Compact Footer */}
       <footer className="border-t border-[#e8e1d5] bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
-          {/* Top Row: Brand & Creators Profiles */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start pb-6 border-b border-[#f0eae1]">
-            {/* Col 1: Brand info */}
-            <div className="space-y-2 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-2">
-                <div className="relative h-7 w-7 rounded-lg overflow-hidden border border-[#ded7c8] shrink-0 bg-[#1c1917]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+            {/* Brand & Creators */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 sm:gap-3 text-xs text-[#78716c]">
+              <div className="flex items-center gap-1.5 font-serif font-semibold text-sm text-[#1c1917]">
+                <div className="relative h-5 w-5 rounded-md overflow-hidden border border-[#ded7c8] shrink-0 bg-[#1c1917]">
                   <Image
                     src="/demuse_logo.png"
-                    alt="Demuse Logo"
-                    width={28}
-                    height={28}
+                    alt="Demuse"
+                    width={20}
+                    height={20}
                     className="object-cover h-full w-full"
                   />
                 </div>
-                <span className="font-serif font-semibold text-lg text-[#1c1917]">Demuse</span>
+                <span>Demuse</span>
               </div>
-              <p className="text-xs text-[#78716c] leading-relaxed max-w-sm">
-                {isVi
-                  ? "Ứng dụng sắp xếp thời khóa biểu và quản lý lịch học nhẹ nhàng, trực quan dành cho sinh viên."
-                  : "A calm, human-designed personal timetable and schedule management application."}
-              </p>
-            </div>
 
-            {/* Col 2: Creators Section */}
-            <div className="space-y-2 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#57534e]">
-                <Heart className="h-3.5 w-3.5 text-rose-500" />
-                <span>{isVi ? "Ý tưởng & Phát triển bởi" : "Crafted & Built by"}</span>
-              </div>
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1">
+              <span className="hidden sm:inline text-[#ded7c8]">/</span>
+
+              <span className="text-[#57534e] flex items-center gap-1">
+                <Heart className="h-3 w-3 text-rose-500 shrink-0 inline" />
+                <span>{isVi ? "Xây dựng bởi" : "Built by"}</span>
+              </span>
+
+              <div className="flex items-center gap-1.5">
                 <a
                   href="https://github.com/DongDuong2001"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:border-[#1c1917] transition-all text-xs font-semibold text-[#1c1917]"
+                  className="font-medium text-[#1c1917] hover:underline transition-all"
                 >
-                  <div className="relative h-4 w-4 rounded-full overflow-hidden shrink-0">
-                    <Image
-                      src="https://github.com/DongDuong2001.png"
-                      alt="Dong Duong"
-                      width={16}
-                      height={16}
-                    />
-                  </div>
-                  <span>Dong Duong</span>
+                  Dong Duong
                 </a>
-
+                <span className="text-[#a8a29e]">&</span>
                 <a
                   href="https://github.com/mthutt"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:border-[#1c1917] transition-all text-xs font-semibold text-[#1c1917]"
+                  className="font-medium text-[#1c1917] hover:underline transition-all"
                 >
-                  <div className="relative h-4 w-4 rounded-full overflow-hidden shrink-0">
-                    <Image
-                      src="https://github.com/mthutt.png"
-                      alt="Thu Tran"
-                      width={16}
-                      height={16}
-                    />
-                  </div>
-                  <span>Thu Tran</span>
+                  Thu Tran
                 </a>
               </div>
             </div>
 
-            {/* Col 3: Support & About Link */}
-            <div className="space-y-2 text-center md:text-right">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#57534e] block">
-                {t.supportProject}
-              </span>
-              <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 pt-1">
-                <a
-                  href="https://github.com/sponsors/DongDuong2001"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:text-[#1c1917] transition-colors text-xs font-medium text-[#57534e]"
-                >
-                  <span>{t.githubSponsors}</span>
-                </a>
-                <a
-                  href="https://ko-fi.com/dongphuduong"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:text-[#1c1917] transition-colors text-xs font-medium text-[#57534e]"
-                >
-                  <span>{t.kofi}</span>
-                </a>
-              </div>
+            {/* Support Links */}
+            <div className="flex items-center justify-center gap-2">
+              <a
+                href="https://github.com/sponsors/DongDuong2001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1 rounded-lg border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:text-[#1c1917] transition-all text-xs font-medium text-[#57534e]"
+              >
+                GitHub Sponsors
+              </a>
+              <a
+                href="https://ko-fi.com/dongphuduong"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1 rounded-lg border border-[#ded7c8] bg-[#faf7f2] hover:bg-[#ede8dc] hover:text-[#1c1917] transition-all text-xs font-medium text-[#57534e]"
+              >
+                Ko-fi
+              </a>
             </div>
           </div>
 
-          {/* Bottom Security & Rights Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#78716c] text-center sm:text-left">
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <span className="flex items-center gap-1 text-[11px] text-[#8c8275]">
-                <Lock className="h-3 w-3" />
-                {t.httpOnly}
-              </span>
-              <Link href="/about" className="hover:text-[#1c1917] underline transition-colors">
-                {isVi ? "Giới thiệu" : "About Us"}
+          {/* Bottom links & Copyright */}
+          <div className="pt-3 border-t border-[#f0eae1] flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11px] text-[#8c8275] text-center sm:text-left">
+            <div className="flex items-center justify-center gap-3.5">
+              <Link href="/about" className="hover:text-[#1c1917] transition-colors">
+                {isVi ? "Giới thiệu" : "About"}
               </Link>
-              <Link href="/privacy" className="hover:text-[#1c1917] underline transition-colors">
+              <Link href="/privacy" className="hover:text-[#1c1917] transition-colors">
                 {t.privacyPolicy}
               </Link>
-              <Link href="/terms" className="hover:text-[#1c1917] underline transition-colors">
+              <Link href="/terms" className="hover:text-[#1c1917] transition-colors">
                 {t.termsOfService}
               </Link>
             </div>
-            <span className="text-[11px] text-[#a8a29e]">
-              © {new Date().getFullYear()} Demuse · {t.rights}
+
+            <span>
+              © {new Date().getFullYear()} Demuse · {isVi ? "Dành cho sinh viên & học tập" : "Designed for learners"}
             </span>
           </div>
         </div>
