@@ -11,10 +11,7 @@ import {
   Share,
   Sliders,
   Bell,
-  Lock,
   Heart,
-  Sparkles,
-  User,
 } from "reicon-react";
 
 export function LandingPageClient() {

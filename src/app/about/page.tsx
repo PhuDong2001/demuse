@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/lib/LanguageContext";
-import { ArrowLeft, Sparkles, Heart, Code, User, ArrowRight } from "reicon-react";
+import { ArrowLeft, Sparkles, Heart, ArrowRight } from "reicon-react";
 import { Button } from "@/components/ui/Button";
 
 export default function AboutPage() {

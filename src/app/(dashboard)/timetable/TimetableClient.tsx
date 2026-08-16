@@ -38,16 +38,14 @@ export function TimetableClient({
 
   const [selectedMobileDay, setSelectedMobileDay] = React.useState<number>(initialDay);
   const [showWeekends, setShowWeekends] = React.useState<boolean>(true);
-  const [viewMode, setViewMode] = React.useState<"cards" | "timeline">("timeline");
-  const [searchQuery, setSearchQuery] = React.useState<string>("");
-
-  // Load preferred view from localStorage if set
-  React.useEffect(() => {
-    const saved = localStorage.getItem("demuse_view_mode");
-    if (saved === "timeline" || saved === "cards") {
-      setViewMode(saved);
+  const [viewMode, setViewMode] = React.useState<"cards" | "timeline">(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("demuse_view_mode");
+      if (saved === "timeline" || saved === "cards") return saved;
     }
-  }, []);
+    return "timeline";
+  });
+  const [searchQuery, setSearchQuery] = React.useState<string>("");
 
   const handleToggleViewMode = (mode: "cards" | "timeline") => {
     setViewMode(mode);
@@ -60,18 +58,24 @@ export function TimetableClient({
   const [editingSchedule, setEditingSchedule] = React.useState<ScheduleWithSubject | null>(null);
   const [modalDefaultDay, setModalDefaultDay] = React.useState<number>(1);
 
-  const [localSchedules, setLocalSchedules] = React.useState<ScheduleWithSubject[]>(schedules);
+  const [optimisticMoves, setOptimisticMoves] = React.useState<Record<string, number>>({});
+  const [deletedIds, setDeletedIds] = React.useState<Set<string>>(() => new Set());
 
-  // Sync props changes to local schedules state
-  React.useEffect(() => {
-    setLocalSchedules(schedules);
-  }, [schedules]);
+  // Derive current effective schedules without setState in useEffect
+  const currentSchedules = React.useMemo(() => {
+    return schedules
+      .filter((s) => !deletedIds.has(s.id))
+      .map((s) => {
+        const movedDay = optimisticMoves[s.id];
+        return movedDay !== undefined ? { ...s, dayOfWeek: movedDay } : s;
+      });
+  }, [schedules, deletedIds, optimisticMoves]);
 
   // Filter schedules based on search query
   const filteredSchedules = React.useMemo(() => {
-    if (!searchQuery.trim()) return localSchedules;
+    if (!searchQuery.trim()) return currentSchedules;
     const q = searchQuery.toLowerCase().trim();
-    return localSchedules.filter(
+    return currentSchedules.filter(
       (s) =>
         s.subject.name.toLowerCase().includes(q) ||
         (s.subject.code && s.subject.code.toLowerCase().includes(q)) ||
@@ -79,7 +83,7 @@ export function TimetableClient({
         (s.room && s.room.toLowerCase().includes(q)) ||
         (s.subject.room && s.subject.room.toLowerCase().includes(q))
     );
-  }, [localSchedules, searchQuery]);
+  }, [currentSchedules, searchQuery]);
 
   const handleAddClass = (dayNumber: number) => {
     setEditingSchedule(null);
@@ -95,35 +99,30 @@ export function TimetableClient({
 
   const handleMoveClassDay = async (schId: string, targetDay: number) => {
     // 1. Instant Optimistic UI Update (0ms latency, zero lag!)
-    setLocalSchedules((prev) =>
-      prev.map((s) => (s.id === schId ? { ...s, dayOfWeek: targetDay } : s))
-    );
+    setOptimisticMoves((prev) => ({ ...prev, [schId]: targetDay }));
 
     // 2. Persist to database in background
     try {
       await updateScheduleAction(schId, { dayOfWeek: targetDay });
     } catch {
       // Revert if error
-      setLocalSchedules(schedules);
+      setOptimisticMoves((prev) => {
+        const copy = { ...prev };
+        delete copy[schId];
+        return copy;
+      });
     }
   };
 
   const handleDuplicate = async (schId: string) => {
-    const res = await duplicateScheduleAction(schId);
-    if (res.success && res.schedule) {
-      const original = localSchedules.find((s) => s.id === schId);
-      if (original) {
-        setLocalSchedules((prev) => [...prev, { ...res.schedule, subject: original.subject }]);
-      }
-    }
+    await duplicateScheduleAction(schId);
     router.refresh();
   };
 
   const handleDelete = async (schId: string) => {
     if (confirm(t.confirmDeleteClass)) {
       // 1. Instant Optimistic UI deletion (0ms latency, disappears immediately!)
-      const previousSchedules = localSchedules;
-      setLocalSchedules((prev) => prev.filter((s) => s.id !== schId));
+      setDeletedIds((prev) => new Set(prev).add(schId));
 
       // 2. Perform deletion in background
       try {
@@ -131,7 +130,11 @@ export function TimetableClient({
         router.refresh();
       } catch {
         // Revert if deletion failed
-        setLocalSchedules(previousSchedules);
+        setDeletedIds((prev) => {
+          const next = new Set(prev);
+          next.delete(schId);
+          return next;
+        });
       }
     }
   };

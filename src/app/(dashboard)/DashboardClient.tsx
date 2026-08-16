@@ -66,15 +66,15 @@ export function DashboardClient({
     day: "numeric",
   });
 
-  // Pick a random quote on mount / render
-  const [randomQuote, setRandomQuote] = React.useState<string>("");
-
-  React.useEffect(() => {
+  // Deterministic daily quote selection based on date without impure random call
+  const randomQuote = React.useMemo(() => {
     if (t.quotes && t.quotes.length > 0) {
-      const idx = Math.floor(Math.random() * t.quotes.length);
-      setRandomQuote(t.quotes[idx]);
+      const dayOfMonth = new Date().getDate();
+      const idx = dayOfMonth % t.quotes.length;
+      return t.quotes[idx];
     }
-  }, [language, t.quotes]);
+    return "";
+  }, [t.quotes]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
