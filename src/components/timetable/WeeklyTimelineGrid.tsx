@@ -28,11 +28,10 @@ export function WeeklyTimelineGrid({
   const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
   const days = showWeekends ? DAYS_OF_WEEK : DAYS_OF_WEEK.slice(0, 5);
 
-  // Auto-fit range calculation based on actual enrolled classes
-  // Default range: 06:00 to 20:00 (14 hours)
+  // Auto-fit range calculation with 1 hour buffer so top (06:00) and bottom (20:00) times are never clipped
   const { startHour, endHour } = React.useMemo(() => {
     if (schedules.length === 0) {
-      return { startHour: 6, endHour: 20 };
+      return { startHour: 6, endHour: 21 };
     }
     let minMinutes = 24 * 60;
     let maxMinutes = 0;
@@ -44,16 +43,17 @@ export function WeeklyTimelineGrid({
       if (eMin > maxMinutes) maxMinutes = eMin;
     }
 
-    const sH = Math.max(Math.floor(minMinutes / 60) - 0, 6);
-    const eH = Math.min(Math.ceil(maxMinutes / 60) + 0, 21);
-    return { startHour: Math.min(sH, 6), endHour: Math.max(eH, 20) };
+    const sH = Math.max(Math.floor(minMinutes / 60) - 1, 5);
+    const eH = Math.min(Math.ceil(maxMinutes / 60) + 1, 22);
+    return { startHour: Math.min(sH, 6), endHour: Math.max(eH, 21) };
   }, [schedules]);
 
   const TOTAL_HOURS = endHour - startHour;
-  // Compact 32px per hour: 14 hours = 448px total height!
-  // Fits 100% on any MacBook / iPad / Laptop screen for one-shot screenshot without scrolling
-  const HOUR_HEIGHT = 32;
-  const TOTAL_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT;
+  // Compact 34px per hour: Clean, crisp, no clipping
+  const HOUR_HEIGHT = 34;
+  const TOP_PADDING = 12; // 12px breathing room so 06:00 top time is 100% visible and never clipped
+  const BOTTOM_PADDING = 16;
+  const TOTAL_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT + TOP_PADDING + BOTTOM_PADDING;
 
   const hoursArray = Array.from({ length: TOTAL_HOURS + 1 }, (_, i) => startHour + i);
 
@@ -61,15 +61,15 @@ export function WeeklyTimelineGrid({
     <div className="w-full rounded-2xl border border-[#ded7c8] bg-white shadow-xs overflow-hidden">
       {/* Zero vertical scroll container: Fits 100% on laptop screens for screenshot */}
       <div className="overflow-x-auto relative">
-        <div className="min-w-[760px]">
+        <div className="min-w-[780px]">
           {/* Header Row: Days of Week */}
           <div
             className="grid border-b border-[#ded7c8] bg-[#faf7f2]/95 backdrop-blur-md sticky top-0 z-30 shadow-2xs"
-            style={{ gridTemplateColumns: `52px repeat(${days.length}, minmax(0, 1fr))` }}
+            style={{ gridTemplateColumns: `58px repeat(${days.length}, minmax(0, 1fr))` }}
           >
             {/* Top-left icon header */}
-            <div className="h-9 border-r border-[#ded7c8] flex items-center justify-center text-[10px] font-semibold text-[#8c8275] bg-[#faf7f2]">
-              <Clock className="h-3.5 w-3.5" />
+            <div className="h-10 border-r border-[#ded7c8] flex items-center justify-center text-[10px] font-semibold text-[#8c8275] bg-[#faf7f2]">
+              <Clock className="h-4 w-4" />
             </div>
 
             {/* Day columns headers */}
@@ -81,16 +81,16 @@ export function WeeklyTimelineGrid({
               return (
                 <div
                   key={day.number}
-                  className={`h-9 px-2 border-r border-[#ded7c8] last:border-r-0 flex items-center justify-between transition-colors ${
+                  className={`h-10 px-2.5 border-r border-[#ded7c8] last:border-r-0 flex items-center justify-between transition-colors ${
                     isWeekend ? "bg-[#f5efe3]/60" : "bg-[#faf7f2]"
                   }`}
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-[11px] font-bold text-[#1c1917] truncate">
+                    <span className="text-xs font-bold text-[#1c1917] truncate">
                       {dayTrans ? dayTrans.full : day.full}
                     </span>
                     {count > 0 && (
-                      <span className="h-3.5 min-w-[14px] px-1 rounded-full bg-[#ede8dc] text-[9px] font-bold text-[#57534e] flex items-center justify-center">
+                      <span className="h-4 min-w-[15px] px-1 rounded-full bg-[#ede8dc] text-[9px] font-bold text-[#57534e] flex items-center justify-center">
                         {count}
                       </span>
                     )}
@@ -102,7 +102,7 @@ export function WeeklyTimelineGrid({
                     className="p-1 rounded-md text-[#78716c] hover:text-[#1c1917] hover:bg-[#ede8dc] transition-colors cursor-pointer shrink-0"
                     title={`${t.addClass} (${dayTrans ? dayTrans.short : day.short})`}
                   >
-                    <Plus className="h-3 w-3" />
+                    <Plus className="h-3.5 w-3.5" />
                   </button>
                 </div>
               );
@@ -113,7 +113,7 @@ export function WeeklyTimelineGrid({
           <div
             className="relative grid bg-white"
             style={{
-              gridTemplateColumns: `52px repeat(${days.length}, minmax(0, 1fr))`,
+              gridTemplateColumns: `58px repeat(${days.length}, minmax(0, 1fr))`,
               height: `${TOTAL_HEIGHT}px`,
             }}
           >
@@ -124,8 +124,8 @@ export function WeeklyTimelineGrid({
                 return (
                   <div
                     key={hour}
-                    className="absolute left-0 right-0 -translate-y-1/2 pr-1.5 text-right text-[10px] font-semibold text-[#8c8275]"
-                    style={{ top: `${idx * HOUR_HEIGHT}px` }}
+                    className="absolute left-0 right-0 -translate-y-1/2 pr-2 text-right text-[11px] font-bold text-[#78716c]"
+                    style={{ top: `${TOP_PADDING + idx * HOUR_HEIGHT}px` }}
                   >
                     {hourFormatted}
                   </div>
@@ -150,7 +150,7 @@ export function WeeklyTimelineGrid({
                     <div
                       key={hour}
                       className="absolute left-0 right-0 border-t border-[#f0eae1] pointer-events-none"
-                      style={{ top: `${idx * HOUR_HEIGHT}px` }}
+                      style={{ top: `${TOP_PADDING + idx * HOUR_HEIGHT}px` }}
                     />
                   ))}
 
@@ -159,7 +159,7 @@ export function WeeklyTimelineGrid({
                     <div
                       key={`half-${hour}`}
                       className="absolute left-0 right-0 border-t border-dashed border-[#f8f5ee] pointer-events-none"
-                      style={{ top: `${idx * HOUR_HEIGHT + HOUR_HEIGHT / 2}px` }}
+                      style={{ top: `${TOP_PADDING + idx * HOUR_HEIGHT + HOUR_HEIGHT / 2}px` }}
                     />
                   ))}
 
@@ -172,9 +172,9 @@ export function WeeklyTimelineGrid({
                     const clampedStart = Math.max(startMin, startHour * 60);
                     const clampedEnd = Math.min(endMin, endHour * 60);
 
-                    const topPx = ((clampedStart - startHour * 60) / 60) * HOUR_HEIGHT;
+                    const topPx = TOP_PADDING + ((clampedStart - startHour * 60) / 60) * HOUR_HEIGHT;
                     const durationMin = Math.max(clampedEnd - clampedStart, 30);
-                    const heightPx = Math.max((durationMin / 60) * HOUR_HEIGHT - 2, 28);
+                    const heightPx = Math.max((durationMin / 60) * HOUR_HEIGHT - 2, 30);
 
                     return (
                       <div
@@ -246,17 +246,17 @@ export function WeeklyTimelineGrid({
 
                           {/* 24-Hour Time info */}
                           <div
-                            className="flex items-center gap-1 text-[10px] font-medium leading-none pt-0.5"
+                            className="flex items-center gap-1 text-[10px] font-semibold leading-none pt-0.5"
                             style={{ color: color.textHex }}
                           >
-                            <Clock className="h-2.5 w-2.5 shrink-0 opacity-70" />
+                            <Clock className="h-2.5 w-2.5 shrink-0 opacity-75" />
                             <span>
                               {formatTimeDisplay(schedule.startTime)} – {formatTimeDisplay(schedule.endTime)}
                             </span>
                           </div>
 
                           {/* Room / Teacher */}
-                          {heightPx >= 45 && (schedule.room || schedule.subject.room || schedule.subject.teacher) && (
+                          {heightPx >= 48 && (schedule.room || schedule.subject.room || schedule.subject.teacher) && (
                             <div
                               className="flex items-center gap-1.5 text-[9px] opacity-85 truncate pt-0.5"
                               style={{ color: color.textHex }}

@@ -6,7 +6,12 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("demuse_session")?.value;
 
   const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/register");
-  const isPublicPage = pathname === "/" || pathname.startsWith("/share");
+  const isPublicPage =
+    pathname === "/" ||
+    pathname.startsWith("/share") ||
+    pathname.startsWith("/about") ||
+    pathname.startsWith("/privacy") ||
+    pathname.startsWith("/terms");
 
   // Allow public landing page, share token page, login, and register to load directly!
   if (isPublicPage || isAuthPage) {
