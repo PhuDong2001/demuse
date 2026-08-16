@@ -243,6 +243,9 @@ function ClassFormInner({
             placeholder="e.g. Data Structures & Algorithms"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
             required
           />
         </div>
@@ -252,6 +255,9 @@ function ClassFormInner({
             placeholder="e.g. CS 204"
             value={code}
             onChange={(e) => setCode(e.target.value)}
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
           />
         </div>
       </div>
@@ -263,12 +269,18 @@ function ClassFormInner({
           placeholder="e.g. Prof. Alan Miller"
           value={teacher}
           onChange={(e) => setTeacher(e.target.value)}
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
         />
         <Input
           label={t.roomVenue}
           placeholder="e.g. Hall 302 or Studio B"
           value={room}
           onChange={(e) => setRoom(e.target.value)}
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
         />
       </div>
 

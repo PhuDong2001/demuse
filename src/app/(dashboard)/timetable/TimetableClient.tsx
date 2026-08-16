@@ -109,14 +109,30 @@ export function TimetableClient({
   };
 
   const handleDuplicate = async (schId: string) => {
-    await duplicateScheduleAction(schId);
+    const res = await duplicateScheduleAction(schId);
+    if (res.success && res.schedule) {
+      const original = localSchedules.find((s) => s.id === schId);
+      if (original) {
+        setLocalSchedules((prev) => [...prev, { ...res.schedule, subject: original.subject }]);
+      }
+    }
     router.refresh();
   };
 
   const handleDelete = async (schId: string) => {
     if (confirm(t.confirmDeleteClass)) {
-      await deleteScheduleAction(schId);
-      router.refresh();
+      // 1. Instant Optimistic UI deletion (0ms latency, disappears immediately!)
+      const previousSchedules = localSchedules;
+      setLocalSchedules((prev) => prev.filter((s) => s.id !== schId));
+
+      // 2. Perform deletion in background
+      try {
+        await deleteScheduleAction(schId);
+        router.refresh();
+      } catch {
+        // Revert if deletion failed
+        setLocalSchedules(previousSchedules);
+      }
     }
   };
 
