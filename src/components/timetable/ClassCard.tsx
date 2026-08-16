@@ -30,7 +30,7 @@ export function ClassCard({
       draggable
       onDragStart={(e) => {
         setIsDragging(true);
-        e.dataTransfer.setData("application/json", JSON.stringify(schedule));
+        e.dataTransfer.setData("text/plain", schedule.id);
         e.dataTransfer.effectAllowed = "move";
         onDragStart?.(e, schedule);
       }}
@@ -40,9 +40,9 @@ export function ClassCard({
         borderColor: color.borderHex,
       }}
       className={cn(
-        "group relative rounded-xl border transition-all text-left planner-interactive overflow-hidden shadow-2xs hover:shadow-xs cursor-grab active:cursor-grabbing select-none",
+        "group relative rounded-xl border text-left planner-interactive overflow-hidden shadow-2xs hover:shadow-xs cursor-grab active:cursor-grabbing select-none transition-transform duration-75",
         compact ? "p-2.5" : "p-3.5",
-        isDragging && "opacity-40 scale-95 ring-2 ring-[#1c1917]"
+        isDragging && "opacity-40 scale-95"
       )}
     >
       {/* Top row: Code / Type badge & Action menu */}

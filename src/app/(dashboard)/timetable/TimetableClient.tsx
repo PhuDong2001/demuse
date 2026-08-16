@@ -60,11 +60,18 @@ export function TimetableClient({
   const [editingSchedule, setEditingSchedule] = React.useState<ScheduleWithSubject | null>(null);
   const [modalDefaultDay, setModalDefaultDay] = React.useState<number>(1);
 
+  const [localSchedules, setLocalSchedules] = React.useState<ScheduleWithSubject[]>(schedules);
+
+  // Sync props changes to local schedules state
+  React.useEffect(() => {
+    setLocalSchedules(schedules);
+  }, [schedules]);
+
   // Filter schedules based on search query
   const filteredSchedules = React.useMemo(() => {
-    if (!searchQuery.trim()) return schedules;
+    if (!searchQuery.trim()) return localSchedules;
     const q = searchQuery.toLowerCase().trim();
-    return schedules.filter(
+    return localSchedules.filter(
       (s) =>
         s.subject.name.toLowerCase().includes(q) ||
         (s.subject.code && s.subject.code.toLowerCase().includes(q)) ||
@@ -72,7 +79,7 @@ export function TimetableClient({
         (s.room && s.room.toLowerCase().includes(q)) ||
         (s.subject.room && s.subject.room.toLowerCase().includes(q))
     );
-  }, [schedules, searchQuery]);
+  }, [localSchedules, searchQuery]);
 
   const handleAddClass = (dayNumber: number) => {
     setEditingSchedule(null);
@@ -87,11 +94,17 @@ export function TimetableClient({
   };
 
   const handleMoveClassDay = async (schId: string, targetDay: number) => {
+    // 1. Instant Optimistic UI Update (0ms latency, zero lag!)
+    setLocalSchedules((prev) =>
+      prev.map((s) => (s.id === schId ? { ...s, dayOfWeek: targetDay } : s))
+    );
+
+    // 2. Persist to database in background
     try {
       await updateScheduleAction(schId, { dayOfWeek: targetDay });
-      router.refresh();
     } catch {
-      // Fallback
+      // Revert if error
+      setLocalSchedules(schedules);
     }
   };
 

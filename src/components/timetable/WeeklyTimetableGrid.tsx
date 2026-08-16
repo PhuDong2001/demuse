@@ -41,7 +41,6 @@ export function WeeklyTimetableGrid({
   };
 
   const handleDragLeave = (e: React.DragEvent, dayNumber: number) => {
-    // Only reset if leaving the column container
     if (e.currentTarget.contains(e.relatedTarget as Node)) return;
     if (dragOverDay === dayNumber) {
       setDragOverDay(null);
@@ -51,16 +50,9 @@ export function WeeklyTimetableGrid({
   const handleDrop = (e: React.DragEvent, targetDay: number) => {
     e.preventDefault();
     setDragOverDay(null);
-    try {
-      const dataStr = e.dataTransfer.getData("application/json");
-      if (dataStr) {
-        const item = JSON.parse(dataStr) as ScheduleWithSubject;
-        if (item && item.id && item.dayOfWeek !== targetDay) {
-          onMoveClassDay?.(item.id, targetDay);
-        }
-      }
-    } catch {
-      // Fallback
+    const schId = e.dataTransfer.getData("text/plain");
+    if (schId) {
+      onMoveClassDay?.(schId, targetDay);
     }
   };
 
@@ -85,9 +77,9 @@ export function WeeklyTimetableGrid({
             onDragOver={(e) => handleDragOver(e, day.number)}
             onDragLeave={(e) => handleDragLeave(e, day.number)}
             onDrop={(e) => handleDrop(e, day.number)}
-            className={`flex flex-col rounded-2xl border transition-all min-h-[380px] p-2.5 sm:p-3 shadow-2xs ${
+            className={`flex flex-col rounded-2xl border transition-colors min-h-[380px] p-2.5 sm:p-3 shadow-2xs ${
               isHovered
-                ? "border-[#1c1917] bg-[#ede8dc]/80 ring-2 ring-[#1c1917]/20 scale-[1.01]"
+                ? "border-[#1c1917] bg-[#ede8dc]/80 ring-2 ring-[#1c1917]/20"
                 : "border-[#ded7c8] bg-white"
             }`}
           >

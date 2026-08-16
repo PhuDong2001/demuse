@@ -78,16 +78,9 @@ export function WeeklyTimelineGrid({
   const handleDrop = (e: React.DragEvent, targetDay: number) => {
     e.preventDefault();
     setDragOverDay(null);
-    try {
-      const dataStr = e.dataTransfer.getData("application/json");
-      if (dataStr) {
-        const item = JSON.parse(dataStr) as ScheduleWithSubject;
-        if (item && item.id && item.dayOfWeek !== targetDay) {
-          onMoveClassDay?.(item.id, targetDay);
-        }
-      }
-    } catch {
-      // Fallback
+    const schId = e.dataTransfer.getData("text/plain");
+    if (schId) {
+      onMoveClassDay?.(schId, targetDay);
     }
   };
 
@@ -228,7 +221,7 @@ export function WeeklyTimelineGrid({
                         key={schedule.id}
                         draggable
                         onDragStart={(e) => {
-                          e.dataTransfer.setData("application/json", JSON.stringify(schedule));
+                          e.dataTransfer.setData("text/plain", schedule.id);
                           e.dataTransfer.effectAllowed = "move";
                         }}
                         onClick={() => onEditClass(schedule)}
@@ -239,7 +232,7 @@ export function WeeklyTimelineGrid({
                           borderColor: color.borderHex,
                           color: color.textHex,
                         }}
-                        className="absolute left-0.5 right-0.5 rounded-lg border px-1.5 py-0.5 text-left cursor-grab active:cursor-grabbing shadow-xs transition-all hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between select-none"
+                        className="absolute left-0.5 right-0.5 rounded-lg border px-1.5 py-0.5 text-left cursor-grab active:cursor-grabbing shadow-xs transition-transform duration-75 hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between select-none"
                       >
                         {/* Left solid color accent bar */}
                         <div
