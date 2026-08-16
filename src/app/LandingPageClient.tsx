@@ -148,12 +148,6 @@ export function LandingPageClient() {
 
           {/* Center Hero Content (Well-spaced & completely uncluttered) */}
           <div className="max-w-2xl mx-auto text-center space-y-4 sm:space-y-6 relative z-10">
-            {/* Biscuit badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ede8dc] text-xs font-semibold text-[#57534e] border border-[#ded7c8] shadow-2xs">
-              <Sparkles className="h-3.5 w-3.5 text-[#854d0e]" />
-              <span>{isVi ? "Ứng dụng thời khóa biểu thông minh" : "Smart Academic Timetable"}</span>
-            </div>
-
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-[#1c1917] leading-[1.15]">
               {t.heroTitle}
             </h1>
