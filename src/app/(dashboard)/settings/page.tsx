@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { requireAuth } from "@/modules/auth/auth.guard";
 import { getUserProfile } from "@/modules/users/users.service";
 import { getUserNotificationSettings } from "@/modules/notifications/notifications.service";
 import { getDefaultTimetable } from "@/modules/timetables/timetables.service";
 import { SettingsClient } from "./SettingsClient";
+
+export const metadata: Metadata = {
+  title: "Settings",
+};
 
 export default async function SettingsPage() {
   const authUser = await requireAuth();

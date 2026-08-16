@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { requireAuth } from "@/modules/auth/auth.guard";
 import { getDefaultTimetable } from "@/modules/timetables/timetables.service";
 import { getSubjectsByTimetable } from "@/modules/subjects/subjects.service";
 import { getTimetableSchedulesWithSubject } from "@/modules/schedules/schedules.service";
 import { TimetableClient } from "./TimetableClient";
+
+export const metadata: Metadata = {
+  title: "Weekly Timetable",
+};
 
 export default async function TimetablePage() {
   const user = await requireAuth();

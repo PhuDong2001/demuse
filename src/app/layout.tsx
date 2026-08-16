@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL || "https://demuse-two.vercel.app"
   ),
   title: {
-    template: "%s · Demuse",
-    default: "Demuse — Personal Timetable & Schedule Planner",
+    template: "Demuse | %s",
+    default: "Demuse | Personal Schedule Planner",
   },
   description: "A calm, human-designed personal timetable and schedule management application.",
   appleWebApp: {
