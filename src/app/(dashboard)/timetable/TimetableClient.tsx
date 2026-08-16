@@ -10,8 +10,12 @@ import { ShareModal } from "@/components/timetable/ShareModal";
 import { Button } from "@/components/ui/Button";
 import { Plus, Share, Search, Sliders, Calendar, Sparkles } from "reicon-react";
 import { getDemuseDayOfWeek, type ScheduleWithSubject } from "@/lib/time";
-import { duplicateScheduleAction, deleteScheduleAction } from "@/actions/schedule.actions";
 import type { Subject, Timetable } from "@/db/schema";
+import {
+  updateScheduleAction,
+  duplicateScheduleAction,
+  deleteScheduleAction,
+} from "@/actions/schedule.actions";
 import { useLanguage } from "@/lib/LanguageContext";
 
 interface TimetableClientProps {
@@ -80,6 +84,15 @@ export function TimetableClient({
     setEditingSchedule(sch);
     setModalDefaultDay(sch.dayOfWeek);
     setIsAddModalOpen(true);
+  };
+
+  const handleMoveClassDay = async (schId: string, targetDay: number) => {
+    try {
+      await updateScheduleAction(schId, { dayOfWeek: targetDay });
+      router.refresh();
+    } catch {
+      // Fallback
+    }
   };
 
   const handleDuplicate = async (schId: string) => {
@@ -198,6 +211,7 @@ export function TimetableClient({
             onEditClass={handleEditClass}
             onDuplicateClass={handleDuplicate}
             onDeleteClass={handleDelete}
+            onMoveClassDay={handleMoveClassDay}
             showWeekends={showWeekends}
           />
         ) : (
@@ -207,6 +221,7 @@ export function TimetableClient({
             onEditClass={handleEditClass}
             onDuplicateClass={handleDuplicate}
             onDeleteClass={handleDelete}
+            onMoveClassDay={handleMoveClassDay}
             showWeekends={showWeekends}
           />
         )}

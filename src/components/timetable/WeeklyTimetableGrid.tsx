@@ -13,6 +13,7 @@ interface WeeklyTimetableGridProps {
   onEditClass: (schedule: ScheduleWithSubject) => void;
   onDuplicateClass: (scheduleId: string) => void;
   onDeleteClass: (scheduleId: string) => void;
+  onMoveClassDay?: (scheduleId: string, targetDay: number) => void;
   showWeekends?: boolean;
 }
 
@@ -22,11 +23,46 @@ export function WeeklyTimetableGrid({
   onEditClass,
   onDuplicateClass,
   onDeleteClass,
+  onMoveClassDay,
   showWeekends = false,
 }: WeeklyTimetableGridProps) {
   const { t } = useLanguage();
   const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
   const days = showWeekends ? DAYS_OF_WEEK : DAYS_OF_WEEK.slice(0, 5);
+
+  const [dragOverDay, setDragOverDay] = React.useState<number | null>(null);
+
+  const handleDragOver = (e: React.DragEvent, dayNumber: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverDay !== dayNumber) {
+      setDragOverDay(dayNumber);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent, dayNumber: number) => {
+    // Only reset if leaving the column container
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+    if (dragOverDay === dayNumber) {
+      setDragOverDay(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetDay: number) => {
+    e.preventDefault();
+    setDragOverDay(null);
+    try {
+      const dataStr = e.dataTransfer.getData("application/json");
+      if (dataStr) {
+        const item = JSON.parse(dataStr) as ScheduleWithSubject;
+        if (item && item.id && item.dayOfWeek !== targetDay) {
+          onMoveClassDay?.(item.id, targetDay);
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  };
 
   return (
     <div
@@ -41,11 +77,19 @@ export function WeeklyTimetableGrid({
           .filter((s) => s.dayOfWeek === day.number)
           .sort((a, b) => a.startTime.localeCompare(b.startTime));
         const dayTrans = t.days[dayKeys[idx]];
+        const isHovered = dragOverDay === day.number;
 
         return (
           <div
             key={day.number}
-            className="flex flex-col rounded-2xl border border-[#ded7c8] bg-white p-2.5 sm:p-3 shadow-2xs transition-all min-h-[360px]"
+            onDragOver={(e) => handleDragOver(e, day.number)}
+            onDragLeave={(e) => handleDragLeave(e, day.number)}
+            onDrop={(e) => handleDrop(e, day.number)}
+            className={`flex flex-col rounded-2xl border transition-all min-h-[380px] p-2.5 sm:p-3 shadow-2xs ${
+              isHovered
+                ? "border-[#1c1917] bg-[#ede8dc]/80 ring-2 ring-[#1c1917]/20 scale-[1.01]"
+                : "border-[#ded7c8] bg-white"
+            }`}
           >
             {/* Day Header */}
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#f0eae1]">
@@ -79,13 +123,19 @@ export function WeeklyTimetableGrid({
               {daySchedules.length === 0 ? (
                 <div
                   onClick={() => onAddClassForDay(day.number)}
-                  className="flex flex-col items-center justify-center h-32 rounded-xl border border-dashed border-[#e6dfd1] bg-[#faf7f2]/40 hover:bg-[#faf7f2] hover:border-[#b8ad96] cursor-pointer transition-all text-center p-3 group"
+                  className={`flex flex-col items-center justify-center h-32 rounded-xl border border-dashed transition-all text-center p-3 group cursor-pointer ${
+                    isHovered
+                      ? "border-[#1c1917] bg-white/90 text-[#1c1917]"
+                      : "border-[#e6dfd1] bg-[#faf7f2]/40 hover:bg-[#faf7f2] hover:border-[#b8ad96]"
+                  }`}
                 >
                   <Plus className="h-4 w-4 text-[#a8a29e] group-hover:text-[#1c1917] transition-colors mb-1" />
                   <span className="text-[11px] text-[#8c8275] group-hover:text-[#1c1917] font-medium">
-                    {t.noClassesOnDay}
+                    {isHovered ? "Thả vào đây" : t.noClassesOnDay}
                   </span>
-                  <span className="text-[9px] text-[#b8b0a4]">{t.clickToAdd}</span>
+                  {!isHovered && (
+                    <span className="text-[9px] text-[#b8b0a4]">{t.clickToAdd}</span>
+                  )}
                 </div>
               ) : (
                 daySchedules.map((schedule) => (

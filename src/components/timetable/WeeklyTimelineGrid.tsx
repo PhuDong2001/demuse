@@ -13,6 +13,7 @@ interface WeeklyTimelineGridProps {
   onEditClass: (scheduleWithSubject: ScheduleWithSubject) => void;
   onDuplicateClass: (scheduleId: string) => void;
   onDeleteClass: (scheduleId: string) => void;
+  onMoveClassDay?: (scheduleId: string, targetDay: number) => void;
   showWeekends?: boolean;
 }
 
@@ -22,13 +23,16 @@ export function WeeklyTimelineGrid({
   onEditClass,
   onDuplicateClass,
   onDeleteClass,
+  onMoveClassDay,
   showWeekends = true,
 }: WeeklyTimelineGridProps) {
   const { t } = useLanguage();
   const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
   const days = showWeekends ? DAYS_OF_WEEK : DAYS_OF_WEEK.slice(0, 5);
 
-  // Auto-fit range calculation with 1 hour buffer so top (06:00) and bottom (20:00) times are never clipped
+  const [dragOverDay, setDragOverDay] = React.useState<number | null>(null);
+
+  // Auto-fit range calculation with buffer so top (06:00) and bottom (20:00) times are never clipped
   const { startHour, endHour } = React.useMemo(() => {
     if (schedules.length === 0) {
       return { startHour: 6, endHour: 21 };
@@ -49,17 +53,47 @@ export function WeeklyTimelineGrid({
   }, [schedules]);
 
   const TOTAL_HOURS = endHour - startHour;
-  // Compact 34px per hour: Clean, crisp, no clipping
   const HOUR_HEIGHT = 34;
-  const TOP_PADDING = 12; // 12px breathing room so 06:00 top time is 100% visible and never clipped
+  const TOP_PADDING = 12;
   const BOTTOM_PADDING = 16;
   const TOTAL_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT + TOP_PADDING + BOTTOM_PADDING;
 
   const hoursArray = Array.from({ length: TOTAL_HOURS + 1 }, (_, i) => startHour + i);
 
+  const handleDragOver = (e: React.DragEvent, dayNumber: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverDay !== dayNumber) {
+      setDragOverDay(dayNumber);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent, dayNumber: number) => {
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+    if (dragOverDay === dayNumber) {
+      setDragOverDay(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetDay: number) => {
+    e.preventDefault();
+    setDragOverDay(null);
+    try {
+      const dataStr = e.dataTransfer.getData("application/json");
+      if (dataStr) {
+        const item = JSON.parse(dataStr) as ScheduleWithSubject;
+        if (item && item.id && item.dayOfWeek !== targetDay) {
+          onMoveClassDay?.(item.id, targetDay);
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  };
+
   return (
     <div className="w-full rounded-2xl border border-[#ded7c8] bg-white shadow-xs overflow-hidden">
-      {/* Zero vertical scroll container: Fits 100% on laptop screens for screenshot */}
+      {/* Zero vertical scroll container */}
       <div className="overflow-x-auto relative">
         <div className="min-w-[780px]">
           {/* Header Row: Days of Week */}
@@ -77,12 +111,17 @@ export function WeeklyTimelineGrid({
               const dayTrans = t.days[dayKeys[idx]];
               const count = schedules.filter((s) => s.dayOfWeek === day.number).length;
               const isWeekend = day.number === 6 || day.number === 7;
+              const isHovered = dragOverDay === day.number;
 
               return (
                 <div
                   key={day.number}
                   className={`h-10 px-2.5 border-r border-[#ded7c8] last:border-r-0 flex items-center justify-between transition-colors ${
-                    isWeekend ? "bg-[#f5efe3]/60" : "bg-[#faf7f2]"
+                    isHovered
+                      ? "bg-[#ede8dc] text-[#1c1917] font-bold"
+                      : isWeekend
+                      ? "bg-[#f5efe3]/60"
+                      : "bg-[#faf7f2]"
                   }`}
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
@@ -133,16 +172,24 @@ export function WeeklyTimelineGrid({
               })}
             </div>
 
-            {/* Day Columns */}
+            {/* Day Columns with Drop Zone Support */}
             {days.map((day) => {
               const daySchedules = schedules.filter((s) => s.dayOfWeek === day.number);
               const isWeekend = day.number === 6 || day.number === 7;
+              const isHovered = dragOverDay === day.number;
 
               return (
                 <div
                   key={day.number}
+                  onDragOver={(e) => handleDragOver(e, day.number)}
+                  onDragLeave={(e) => handleDragLeave(e, day.number)}
+                  onDrop={(e) => handleDrop(e, day.number)}
                   className={`relative border-r border-[#ded7c8] last:border-r-0 h-full group/col transition-colors ${
-                    isWeekend ? "bg-[#faf8f4]/60" : "bg-white"
+                    isHovered
+                      ? "bg-[#ede8dc]/50 ring-2 ring-inset ring-[#1c1917]/20"
+                      : isWeekend
+                      ? "bg-[#faf8f4]/60"
+                      : "bg-white"
                   }`}
                 >
                   {/* Horizontal Hour Guideline Rows */}
@@ -179,6 +226,11 @@ export function WeeklyTimelineGrid({
                     return (
                       <div
                         key={schedule.id}
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData("application/json", JSON.stringify(schedule));
+                          e.dataTransfer.effectAllowed = "move";
+                        }}
                         onClick={() => onEditClass(schedule)}
                         style={{
                           top: `${topPx}px`,
@@ -187,7 +239,7 @@ export function WeeklyTimelineGrid({
                           borderColor: color.borderHex,
                           color: color.textHex,
                         }}
-                        className="absolute left-0.5 right-0.5 rounded-lg border px-1.5 py-0.5 text-left cursor-pointer shadow-xs transition-all hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between"
+                        className="absolute left-0.5 right-0.5 rounded-lg border px-1.5 py-0.5 text-left cursor-grab active:cursor-grabbing shadow-xs transition-all hover:shadow-md hover:z-20 group overflow-hidden flex flex-col justify-between select-none"
                       >
                         {/* Left solid color accent bar */}
                         <div

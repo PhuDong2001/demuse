@@ -9,6 +9,7 @@ interface ClassCardProps {
   onEdit: (schedule: ScheduleWithSubject) => void;
   onDuplicate: (scheduleId: string) => void;
   onDelete: (scheduleId: string) => void;
+  onDragStart?: (e: React.DragEvent, schedule: ScheduleWithSubject) => void;
   compact?: boolean;
 }
 
@@ -17,20 +18,31 @@ export function ClassCard({
   onEdit,
   onDuplicate,
   onDelete,
+  onDragStart,
   compact = false,
 }: ClassCardProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isDragging, setIsDragging] = React.useState(false);
   const color = getSubjectColor(schedule.subject.color);
 
   return (
     <div
+      draggable
+      onDragStart={(e) => {
+        setIsDragging(true);
+        e.dataTransfer.setData("application/json", JSON.stringify(schedule));
+        e.dataTransfer.effectAllowed = "move";
+        onDragStart?.(e, schedule);
+      }}
+      onDragEnd={() => setIsDragging(false)}
       style={{
         backgroundColor: color.bgHex,
         borderColor: color.borderHex,
       }}
       className={cn(
-        "group relative rounded-xl border transition-all text-left planner-interactive overflow-hidden shadow-2xs hover:shadow-xs",
-        compact ? "p-2.5" : "p-3.5"
+        "group relative rounded-xl border transition-all text-left planner-interactive overflow-hidden shadow-2xs hover:shadow-xs cursor-grab active:cursor-grabbing select-none",
+        compact ? "p-2.5" : "p-3.5",
+        isDragging && "opacity-40 scale-95 ring-2 ring-[#1c1917]"
       )}
     >
       {/* Top row: Code / Type badge & Action menu */}
