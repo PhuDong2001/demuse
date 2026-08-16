@@ -5,14 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/lib/LanguageContext";
-import {
-  ArrowRight,
-  Clock,
-  Share,
-  Sliders,
-  Bell,
-  Heart,
-} from "reicon-react";
+import { ArrowRight, Heart } from "reicon-react";
 
 export function LandingPageClient() {
   const { language, setLanguage, t } = useLanguage();
@@ -217,9 +210,17 @@ export function LandingPageClient() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 text-left">
-            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2 shadow-2xs hover:shadow-xs transition-shadow">
-              <div className="h-9 w-9 rounded-lg bg-[#ede8dc] flex items-center justify-center text-[#1c1917]">
-                <Clock className="h-4 w-4" />
+            {/* Feature 1: Live Countdown (wait.gif) */}
+            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2.5 shadow-2xs hover:shadow-xs transition-all hover:border-[#1c1917]/30 group">
+              <div className="h-11 w-11 rounded-xl bg-[#faf7f2] border border-[#ded7c8] p-1.5 flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform overflow-hidden">
+                <Image
+                  src="/animation_icon/wait.gif"
+                  alt="Countdown"
+                  width={36}
+                  height={36}
+                  className="object-contain w-full h-full"
+                  unoptimized
+                />
               </div>
               <h3 className="font-serif text-base font-semibold text-[#1c1917]">
                 {t.feature1Title}
@@ -229,9 +230,17 @@ export function LandingPageClient() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2 shadow-2xs hover:shadow-xs transition-shadow">
-              <div className="h-9 w-9 rounded-lg bg-[#ede8dc] flex items-center justify-center text-[#1c1917]">
-                <Sliders className="h-4 w-4" />
+            {/* Feature 2: Conflict Detection (binocular.gif) */}
+            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2.5 shadow-2xs hover:shadow-xs transition-all hover:border-[#1c1917]/30 group">
+              <div className="h-11 w-11 rounded-xl bg-[#faf7f2] border border-[#ded7c8] p-1.5 flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform overflow-hidden">
+                <Image
+                  src="/animation_icon/binocular.gif"
+                  alt="Conflict Detection"
+                  width={36}
+                  height={36}
+                  className="object-contain w-full h-full"
+                  unoptimized
+                />
               </div>
               <h3 className="font-serif text-base font-semibold text-[#1c1917]">
                 {t.feature2Title}
@@ -241,9 +250,17 @@ export function LandingPageClient() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2 shadow-2xs hover:shadow-xs transition-shadow">
-              <div className="h-9 w-9 rounded-lg bg-[#ede8dc] flex items-center justify-center text-[#1c1917]">
-                <Bell className="h-4 w-4" />
+            {/* Feature 3: Notifications (notification.gif) */}
+            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2.5 shadow-2xs hover:shadow-xs transition-all hover:border-[#1c1917]/30 group">
+              <div className="h-11 w-11 rounded-xl bg-[#faf7f2] border border-[#ded7c8] p-1.5 flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform overflow-hidden">
+                <Image
+                  src="/animation_icon/notification.gif"
+                  alt="Notifications"
+                  width={36}
+                  height={36}
+                  className="object-contain w-full h-full"
+                  unoptimized
+                />
               </div>
               <h3 className="font-serif text-base font-semibold text-[#1c1917]">
                 {t.feature3Title}
@@ -253,9 +270,17 @@ export function LandingPageClient() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2 shadow-2xs hover:shadow-xs transition-shadow">
-              <div className="h-9 w-9 rounded-lg bg-[#ede8dc] flex items-center justify-center text-[#1c1917]">
-                <Share className="h-4 w-4" />
+            {/* Feature 4: Share Timetable (share.gif) */}
+            <div className="rounded-2xl border border-[#ded7c8] bg-white p-5 space-y-2.5 shadow-2xs hover:shadow-xs transition-all hover:border-[#1c1917]/30 group">
+              <div className="h-11 w-11 rounded-xl bg-[#faf7f2] border border-[#ded7c8] p-1.5 flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform overflow-hidden">
+                <Image
+                  src="/animation_icon/share.gif"
+                  alt="Share Schedule"
+                  width={36}
+                  height={36}
+                  className="object-contain w-full h-full"
+                  unoptimized
+                />
               </div>
               <h3 className="font-serif text-base font-semibold text-[#1c1917]">
                 {t.feature4Title}
