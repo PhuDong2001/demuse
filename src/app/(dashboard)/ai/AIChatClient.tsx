@@ -107,9 +107,7 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl border border-[#ded7c8] bg-white shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-linear-to-br from-amber-500/20 to-orange-500/20 border border-amber-300 flex items-center justify-center text-amber-800 shadow-2xs">
-            <RobotIcon className="h-5 w-5" />
-          </div>
+          <RobotIcon className="h-10 w-10" size={40} />
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-serif text-xl sm:text-2xl font-medium text-[#1c1917]">
@@ -164,9 +162,7 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
                 }`}
               >
                 {isAssistant && (
-                  <div className="h-8 w-8 rounded-lg bg-[#ede8dc] border border-[#ded7c8] flex items-center justify-center text-[#854d0e] shrink-0">
-                    <RobotIcon className="h-4 w-4" />
-                  </div>
+                  <RobotIcon className="h-8 w-8" size={32} />
                 )}
 
                 <div
@@ -180,7 +176,7 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
                 </div>
 
                 {!isAssistant && (
-                  <div className="h-8 w-8 rounded-lg bg-[#1c1917] text-white flex items-center justify-center shrink-0 text-xs font-semibold">
+                  <div className="h-8 w-8 rounded-full bg-[#1c1917] text-white flex items-center justify-center shrink-0 text-xs font-semibold shadow-2xs">
                     <User className="h-4 w-4" />
                   </div>
                 )}
@@ -190,9 +186,7 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
 
           {isLoading && (
             <div className="flex gap-3 justify-start items-center animate-pulse">
-              <div className="h-8 w-8 rounded-lg bg-[#ede8dc] border border-[#ded7c8] flex items-center justify-center text-[#854d0e] shrink-0">
-                <RobotIcon className="h-4 w-4" />
-              </div>
+              <RobotIcon className="h-8 w-8" size={32} />
               <div className="rounded-2xl px-4 py-3 bg-[#faf7f2] border border-[#e8e1d5] text-xs text-[#78716c] flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-[#854d0e] animate-bounce" />
                 <div className="h-1.5 w-1.5 rounded-full bg-[#854d0e] animate-bounce [animation-delay:0.2s]" />

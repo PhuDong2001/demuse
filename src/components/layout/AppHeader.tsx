@@ -96,11 +96,11 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
           <button
             type="button"
             onClick={() => setIsAIModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100/80 text-amber-900 text-xs font-semibold transition-all cursor-pointer shadow-2xs group"
+            className="flex items-center gap-2 px-2.5 py-1 rounded-full border border-[#ded7c8] bg-white hover:bg-[#ede8dc] text-[#1c1917] text-xs font-semibold transition-all cursor-pointer shadow-2xs group"
             title="Open AI Assistant (Groq Llama 3.1)"
           >
-            <RobotIcon className="h-3.5 w-3.5 text-amber-700 group-hover:scale-110 transition-transform" />
-            <span className="hidden sm:inline">{t.aiAssistant}</span>
+            <RobotIcon className="h-5 w-5 group-hover:scale-105 transition-transform" size={20} />
+            <span className="hidden sm:inline font-serif tracking-tight">{t.aiAssistant}</span>
           </button>
 
           {/* Quick Cmd+K Search Trigger */}

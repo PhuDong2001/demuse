@@ -114,9 +114,7 @@ export function AIAssistantModal({
         {/* Header Bar */}
         <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#f0eae1] bg-[#faf7f2]/80 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-900 shadow-2xs">
-              <RobotIcon className="h-4 w-4" />
-            </div>
+            <RobotIcon className="h-8 w-8" size={32} />
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-serif text-base font-semibold text-[#1c1917]">
@@ -179,9 +177,7 @@ export function AIAssistantModal({
                 }`}
               >
                 {isAssistant && (
-                  <div className="h-7 w-7 rounded-lg bg-[#ede8dc] border border-[#ded7c8] flex items-center justify-center text-[#854d0e] shrink-0 mt-0.5">
-                    <RobotIcon className="h-3.5 w-3.5" />
-                  </div>
+                  <RobotIcon className="h-7 w-7 mt-0.5" size={28} />
                 )}
 
                 <div
@@ -195,7 +191,7 @@ export function AIAssistantModal({
                 </div>
 
                 {!isAssistant && (
-                  <div className="h-7 w-7 rounded-lg bg-[#1c1917] text-white flex items-center justify-center shrink-0 text-xs font-semibold mt-0.5">
+                  <div className="h-7 w-7 rounded-full bg-[#1c1917] text-white flex items-center justify-center shrink-0 text-xs font-semibold mt-0.5 shadow-2xs">
                     <User className="h-3.5 w-3.5" />
                   </div>
                 )}
@@ -205,9 +201,7 @@ export function AIAssistantModal({
 
           {isLoading && (
             <div className="flex gap-2.5 justify-start items-center animate-pulse">
-              <div className="h-7 w-7 rounded-lg bg-[#ede8dc] border border-[#ded7c8] flex items-center justify-center text-[#854d0e] shrink-0">
-                <RobotIcon className="h-3.5 w-3.5" />
-              </div>
+              <RobotIcon className="h-7 w-7" size={28} />
               <div className="rounded-2xl px-3.5 py-2 bg-[#faf7f2] border border-[#e8e1d5] text-xs text-[#78716c] flex items-center gap-1.5">
                 <div className="h-1.5 w-1.5 rounded-full bg-[#854d0e] animate-bounce" />
                 <div className="h-1.5 w-1.5 rounded-full bg-[#854d0e] animate-bounce [animation-delay:0.2s]" />
