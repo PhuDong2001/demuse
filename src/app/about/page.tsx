@@ -60,13 +60,13 @@ export default function AboutPage() {
             </div>
             <h1 className="font-serif text-3xl sm:text-5xl font-medium tracking-tight text-[#1c1917] leading-tight">
               {isVi
-                ? "Một ứng dụng thời khóa biểu tinh gọn, thiết kế vì con người"
-                : "A calm, human-designed personal timetable & schedule planner"}
+                ? "Một không gian quản lý lịch trình tinh gọn cho học tập, công việc & đời sống"
+                : "A calm, intentional schedule planner for study, work & life"}
             </h1>
             <p className="text-sm sm:text-base text-[#6b645b] max-w-2xl leading-relaxed">
               {isVi
-                ? "Demuse được ra đời từ nhu cầu thực tế: một không gian quản lý lịch học nhẹ nhàng, rõ ràng, không rối rắm và giúp mỗi sinh viên, học viên bao quát tuần học của mình chỉ trong một cái nhìn."
-                : "Demuse was born out of a real-life need: a calm, clutter-free schedule workspace where students and learners can visualize their whole week clearly at a single glance."}
+                ? "Demuse được tạo ra để mang lại trải nghiệm xếp lịch nhẹ nhàng, rõ ràng và không rối rắm. Dù là lịch học trên trường, ca làm việc tại công ty, cuộc họp nhóm hay thói quen cá nhân, bạn đều có thể bao quát toàn bộ tuần chỉ trong một cái nhìn."
+                : "Demuse was created to provide a calm, clutter-free schedule workspace. Whether you are balancing university lectures, work shifts, team meetings, or personal routines, Demuse brings complete clarity to your entire week at a single glance."}
             </p>
           </div>
 
@@ -81,36 +81,36 @@ export default function AboutPage() {
               </h3>
               <p className="text-xs text-[#6b645b] leading-relaxed">
                 {isVi
-                  ? "Tập trung tuyệt đối vào thời gian học, không chi tiết thừa, màu sắc trang nhã được cân chỉnh hài hòa."
+                  ? "Tập trung tuyệt đối vào thời gian và công việc của bạn, không chi tiết thừa, màu sắc trang nhã được cân chỉnh hài hòa."
                   : "Zero clutter, harmonious palette, and intuitive interactions designed to reduce cognitive load."}
               </p>
             </div>
 
             <div className="rounded-xl border border-[#ded7c8] bg-[#faf7f2]/60 p-4 space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#78716c]">
-                {isVi ? "Trải Nghiệm" : "Experience"}
+                {isVi ? "Tính Linh Hoạt" : "Work & Life Balance"}
               </span>
               <h3 className="font-serif text-base font-semibold text-[#1c1917]">
-                {isVi ? "Bao Quát Toàn Diện" : "Single-Glance View"}
+                {isVi ? "Đa Năng & Mở Rộng" : "Study & Work Flow"}
               </h3>
               <p className="text-xs text-[#6b645b] leading-relaxed">
                 {isVi
-                  ? "Hiển thị trọn vẹn 7 ngày trong tuần với mốc giờ 24h, hỗ trợ chụp ảnh màn hình tiện lợi chia sẻ bạn bè."
-                  : "Full 7-day layout with 24-hour timeline, tailored for instant screenshots and seamless sharing."}
+                  ? "Hỗ trợ đầy đủ tiết học, ca làm, cuộc họp, buổi tự học và đồng bộ lịch .ics từ Google Calendar, Apple iCal."
+                  : "Effortlessly combine coursework, job shifts, meetings, and calendar sync from Google & Apple."}
               </p>
             </div>
 
             <div className="rounded-xl border border-[#ded7c8] bg-[#faf7f2]/60 p-4 space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#78716c]">
-                {isVi ? "Bảo Mật & Riêng Tư" : "Privacy First"}
+                {isVi ? "Bảo Mật & Quyền Riêng Tư" : "Privacy & Speed"}
               </span>
               <h3 className="font-serif text-base font-semibold text-[#1c1917]">
-                {isVi ? "An Toàn Tuyệt Đối" : "Secure by Default"}
+                {isVi ? "An Toàn Tuyệt Đối" : "Fast & Private"}
               </h3>
               <p className="text-xs text-[#6b645b] leading-relaxed">
                 {isVi
-                  ? "Phiên đăng nhập HTTPOnly Cookie an toàn, lịch học mặc định ở chế độ riêng tư và chỉ chia sẻ khi bạn muốn."
-                  : "HTTPOnly cookie authentication, isolated tenant data, and token-based public share controls."}
+                  ? "Dữ liệu riêng tư được bảo vệ nghiêm ngặt, cookie an toàn HttpOnly, không bán dữ liệu cho bên thứ ba."
+                  : "Strict HttpOnly session security, encrypted databases, and zero tracking of your schedule."}
               </p>
             </div>
           </div>
