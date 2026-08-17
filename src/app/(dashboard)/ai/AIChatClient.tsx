@@ -5,13 +5,13 @@ import { askDemuseAIAction, type AIChatMessage } from "@/actions/ai.actions";
 import { useLanguage } from "@/lib/LanguageContext";
 import { Button } from "@/components/ui/Button";
 import {
-  Sparkles,
   Send,
   Trash2,
   User,
   AlertTriangle,
   Lightbulb,
 } from "reicon-react";
+import { RobotIcon } from "@/components/ui/RobotIcon";
 
 interface AIChatClientProps {
   user: {
@@ -29,8 +29,8 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
   const initialGreeting: AIChatMessage = {
     role: "assistant",
     content: isVi
-      ? `Xin chào ${user.name}! Mình là Trợ lý AI Demuse (chạy trên nền tảng siêu tốc Groq Llama 3.3). Mình đã nắm rõ toàn bộ thời khóa biểu và ca làm việc của bạn trong tuần. Bạn muốn hỏi về lịch hôm nay, tìm thời gian rảnh, hay cần mình phân tích lịch trình mới?`
-      : `Hello ${user.name}! I'm Demuse AI (powered by ultra-fast Groq Llama 3.3). I have full context of your weekly schedule and commitments. How can I help you plan your week, check free slots, or parse new schedules today?`,
+      ? `Xin chào ${user.name}! Mình là Trợ lý AI Demuse (hỗ trợ nền tảng siêu tốc Groq Llama 3.1 & 3.3). Mình đã nắm rõ toàn bộ thời khóa biểu và ca làm việc của bạn trong tuần. Bạn muốn hỏi về lịch hôm nay, tìm thời gian rảnh, hay cần mình phân tích lịch trình mới?`
+      : `Hello ${user.name}! I'm Demuse AI (powered by ultra-fast Groq Llama 3.1 & 3.3). I have full context of your weekly schedule and commitments. How can I help you plan your week, check free slots, or parse new schedules today?`,
   };
 
   const [messages, setMessages] = React.useState<AIChatMessage[]>([initialGreeting]);
@@ -108,7 +108,7 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl border border-[#ded7c8] bg-white shadow-xs">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-linear-to-br from-amber-500/20 to-orange-500/20 border border-amber-300 flex items-center justify-center text-amber-800 shadow-2xs">
-            <Sparkles className="h-5 w-5" />
+            <RobotIcon className="h-5 w-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
               >
                 {isAssistant && (
                   <div className="h-8 w-8 rounded-lg bg-[#ede8dc] border border-[#ded7c8] flex items-center justify-center text-[#854d0e] shrink-0">
-                    <Sparkles className="h-4 w-4" />
+                    <RobotIcon className="h-4 w-4" />
                   </div>
                 )}
 
@@ -191,7 +191,7 @@ export function AIChatClient({ user, timetableId }: AIChatClientProps) {
           {isLoading && (
             <div className="flex gap-3 justify-start items-center animate-pulse">
               <div className="h-8 w-8 rounded-lg bg-[#ede8dc] border border-[#ded7c8] flex items-center justify-center text-[#854d0e] shrink-0">
-                <Sparkles className="h-4 w-4" />
+                <RobotIcon className="h-4 w-4" />
               </div>
               <div className="rounded-2xl px-4 py-3 bg-[#faf7f2] border border-[#e8e1d5] text-xs text-[#78716c] flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-[#854d0e] animate-bounce" />

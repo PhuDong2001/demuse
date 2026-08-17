@@ -12,6 +12,7 @@ import {
   BookOpen,
   Download,
 } from "reicon-react";
+import { RobotIcon } from "../ui/RobotIcon";
 
 interface CommandPaletteProps {
   isOpen?: boolean;
@@ -158,7 +159,7 @@ export function CommandPalette({
         title: isVi ? "Đến Trợ lý AI (Groq)" : "Go to AI Assistant (Groq)",
         shortcut: "A",
         category: isVi ? "Điều hướng" : "Navigation",
-        icon: Sparkles,
+        icon: RobotIcon,
         perform: () => {
           handleClose();
           router.push("/ai");

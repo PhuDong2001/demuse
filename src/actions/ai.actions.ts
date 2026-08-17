@@ -80,14 +80,36 @@ Rules:
       })),
     ];
 
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: groqMessages,
-      temperature: 0.6,
-      max_tokens: 1024,
-    });
+    const candidateModels = [
+      "llama-3.1-8b-instant",
+      "llama-3.3-70b-versatile",
+      "llama3-70b-8192",
+      "llama3-8b-8192",
+      "mixtral-8x7b-32768",
+    ];
 
-    const reply = completion.choices[0]?.message?.content || "I am sorry, I could not generate a response.";
+    let reply = "";
+    let lastError: unknown = null;
+
+    for (const model of candidateModels) {
+      try {
+        const completion = await groq.chat.completions.create({
+          model,
+          messages: groqMessages,
+          temperature: 0.6,
+          max_tokens: 1024,
+        });
+        reply = completion.choices[0]?.message?.content || "";
+        if (reply) break;
+      } catch (err: unknown) {
+        lastError = err;
+        console.warn(`Groq model ${model} failed, trying next candidate...`);
+      }
+    }
+
+    if (!reply && lastError) {
+      throw lastError;
+    }
     return {
       success: true,
       message: reply,

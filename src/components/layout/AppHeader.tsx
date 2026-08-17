@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Plus, Sparkles, Logout, User, Calendar, BookOpen, Settings } from "reicon-react";
+import { RobotIcon } from "../ui/RobotIcon";
 import { Button } from "../ui/Button";
 import { logoutAction } from "@/actions/auth.actions";
 import { getInitials } from "@/lib/utils";
@@ -30,7 +31,7 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
     { href: "/", label: t.today, icon: Sparkles },
     { href: "/timetable", label: t.timetable, icon: Calendar },
     { href: "/subjects", label: t.courses, icon: BookOpen },
-    { href: "/ai", label: t.aiAssistant, icon: Sparkles },
+    { href: "/ai", label: t.aiAssistant, icon: RobotIcon },
     { href: "/settings", label: t.settings, icon: Settings },
   ];
 

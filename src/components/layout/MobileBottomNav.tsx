@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sparkles, Calendar, BookOpen, Settings, Plus } from "reicon-react";
+import { RobotIcon } from "../ui/RobotIcon";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/LanguageContext";
 
@@ -18,7 +19,7 @@ export function MobileBottomNav({ onOpenAddModal }: MobileBottomNavProps) {
   const navItems = [
     { href: "/", label: t.today, icon: Sparkles },
     { href: "/timetable", label: t.timetable, icon: Calendar },
-    { href: "/ai", label: t.aiAssistant, icon: Sparkles },
+    { href: "/ai", label: t.aiAssistant, icon: RobotIcon },
     { href: "/subjects", label: t.courses, icon: BookOpen },
     { href: "/settings", label: t.settings, icon: Settings },
   ];
