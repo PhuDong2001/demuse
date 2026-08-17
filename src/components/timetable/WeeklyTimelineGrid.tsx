@@ -32,30 +32,13 @@ export function WeeklyTimelineGrid({
 
   const [dragOverDay, setDragOverDay] = React.useState<number | null>(null);
 
-  // Auto-fit range calculation with buffer so top (06:00) and bottom (20:00) times are never clipped
-  const { startHour, endHour } = React.useMemo(() => {
-    if (schedules.length === 0) {
-      return { startHour: 6, endHour: 21 };
-    }
-    let minMinutes = 24 * 60;
-    let maxMinutes = 0;
-
-    for (const s of schedules) {
-      const sMin = timeToMinutes(s.startTime);
-      const eMin = timeToMinutes(s.endTime);
-      if (sMin < minMinutes) minMinutes = sMin;
-      if (eMin > maxMinutes) maxMinutes = eMin;
-    }
-
-    const sH = Math.max(Math.floor(minMinutes / 60) - 1, 5);
-    const eH = Math.min(Math.ceil(maxMinutes / 60) + 1, 22);
-    return { startHour: Math.min(sH, 6), endHour: Math.max(eH, 21) };
-  }, [schedules]);
-
-  const TOTAL_HOURS = endHour - startHour;
-  const HOUR_HEIGHT = 34;
-  const TOP_PADDING = 12;
-  const BOTTOM_PADDING = 16;
+  // 24-hour full cycle (00:00 - 24:00) without awkward cutoff, ultra-compact to avoid scrolling
+  const startHour = 0;
+  const endHour = 24;
+  const TOTAL_HOURS = 24;
+  const HOUR_HEIGHT = 26; // Ultra-compact 26px per hour keeps total height at ~640px, fitting standard screens comfortably
+  const TOP_PADDING = 8;
+  const BOTTOM_PADDING = 12;
   const TOTAL_HEIGHT = TOTAL_HOURS * HOUR_HEIGHT + TOP_PADDING + BOTTOM_PADDING;
 
   const hoursArray = Array.from({ length: TOTAL_HOURS + 1 }, (_, i) => startHour + i);
@@ -153,13 +136,16 @@ export function WeeklyTimelineGrid({
             <div className="relative border-r border-[#ded7c8] bg-[#faf7f2]/50 select-none">
               {hoursArray.map((hour, idx) => {
                 const hourFormatted = `${hour.toString().padStart(2, "0")}:00`;
+                const isEvenHour = hour % 2 === 0;
                 return (
                   <div
                     key={hour}
-                    className="absolute left-0 right-0 -translate-y-1/2 pr-2 text-right text-[11px] font-bold text-[#78716c]"
+                    className={`absolute left-0 right-0 -translate-y-1/2 pr-2 text-right transition-opacity ${
+                      isEvenHour ? "text-[10px] font-semibold text-[#78716c]" : "text-[9px] text-[#a8a29e]"
+                    }`}
                     style={{ top: `${TOP_PADDING + idx * HOUR_HEIGHT}px` }}
                   >
-                    {hourFormatted}
+                    {isEvenHour ? hourFormatted : "·"}
                   </div>
                 );
               })}

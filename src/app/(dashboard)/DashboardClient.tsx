@@ -4,6 +4,7 @@ import * as React from "react";
 import { NextClassHero } from "@/components/dashboard/NextClassHero";
 import { TodayTimeline } from "@/components/dashboard/TodayTimeline";
 import { WeekOverviewStrip } from "@/components/dashboard/WeekOverviewStrip";
+import { EventTypesGuide } from "@/components/dashboard/EventTypesGuide";
 import { ClassFormModal } from "@/components/timetable/ClassFormModal";
 import { getDemuseDayOfWeek, type ScheduleWithSubject } from "@/lib/time";
 import { Plus } from "reicon-react";
@@ -122,6 +123,9 @@ export function DashboardClient({
             onOpenAddModal={() => handleOpenAdd(todayNumber)}
             onEditClass={handleEditClass}
           />
+
+          {/* Event & Activity Types Quick Guide */}
+          <EventTypesGuide onSelectType={() => handleOpenAdd(todayNumber)} />
         </div>
 
         {/* Weekly Workload Strip & Quick Info (1 col) */}
