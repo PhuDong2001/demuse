@@ -78,3 +78,29 @@ export async function deleteScheduleAction(scheduleId: string) {
 
   return { success: true };
 }
+
+export async function importCalendarAction(
+  timetableId: string,
+  events: {
+    name: string;
+    code?: string;
+    teacher?: string;
+    room?: string;
+    color?: string;
+    note?: string;
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+    type?: string;
+  }[]
+) {
+  const user = await requireAuth();
+  const { importCalendarEvents } = await import("@/modules/schedules/schedules.service");
+  const result = await importCalendarEvents(user.id, timetableId, events);
+
+  revalidatePath("/timetable");
+  revalidatePath("/subjects");
+  revalidatePath("/");
+
+  return result;
+}

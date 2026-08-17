@@ -177,7 +177,10 @@ export const CLASS_TYPES = [
   { value: "tutorial", label: "Tutorial" },
   { value: "seminar", label: "Seminar" },
   { value: "workshop", label: "Workshop" },
-  { value: "study", label: "Self Study" },
+  { value: "work", label: "Work / Shift" },
+  { value: "meeting", label: "Meeting" },
+  { value: "study", label: "Self Study / Focus" },
+  { value: "personal", label: "Personal / Fitness" },
 ] as const;
 
 export const NOTIFICATION_INTERVALS = [

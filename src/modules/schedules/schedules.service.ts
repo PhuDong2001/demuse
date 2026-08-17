@@ -268,3 +268,73 @@ export async function createClassWithSchedules(
     schedules: createdSchedules,
   };
 }
+
+export interface ImportCalendarEventItem {
+  name: string;
+  code?: string;
+  teacher?: string;
+  room?: string;
+  color?: string;
+  note?: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  type?: string;
+}
+
+export async function importCalendarEvents(
+  userId: string,
+  timetableId: string,
+  events: ImportCalendarEventItem[]
+) {
+  await getTimetableById(timetableId, userId);
+
+  const existingSubjects = await db.query.subjects.findMany({
+    where: eq(subjects.timetableId, timetableId),
+  });
+
+  const subjectMap = new Map<string, string>(); // name.toLowerCase() -> subjectId
+  for (const sub of existingSubjects) {
+    subjectMap.set(sub.name.trim().toLowerCase(), sub.id);
+  }
+
+  let importedCount = 0;
+
+  for (const item of events) {
+    const normName = item.name.trim().toLowerCase();
+    let subjectId = subjectMap.get(normName);
+
+    if (!subjectId) {
+      // Create new subject
+      const [newSub] = await db
+        .insert(subjects)
+        .values({
+          timetableId,
+          name: item.name.trim(),
+          code: item.code || null,
+          teacher: item.teacher || null,
+          room: item.room || null,
+          color: item.color || "sage",
+          note: item.note || null,
+        })
+        .returning();
+      subjectId = newSub.id;
+      subjectMap.set(normName, subjectId);
+    }
+
+    // Insert schedule slot
+    await db.insert(schedules).values({
+      subjectId,
+      dayOfWeek: item.dayOfWeek,
+      startTime: item.startTime,
+      endTime: item.endTime,
+      room: item.room || null,
+      type: item.type || "lecture",
+    });
+
+    importedCount++;
+  }
+
+  return { success: true, count: importedCount };
+}
+

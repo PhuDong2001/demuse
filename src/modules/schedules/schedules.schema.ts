@@ -4,13 +4,27 @@ import { SUBJECT_COLORS } from "@/lib/constants";
 
 const timeStringRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
+export const scheduleTypeEnum = z
+  .enum([
+    "lecture",
+    "lab",
+    "tutorial",
+    "seminar",
+    "workshop",
+    "work",
+    "meeting",
+    "study",
+    "personal",
+  ])
+  .default("lecture");
+
 // Base unrefined object schema so .extend() and .partial() are fully supported
 export const baseScheduleSlotObject = z.object({
   dayOfWeek: z.number().int().min(1).max(7),
   startTime: z.string().regex(timeStringRegex, "Time must be in HH:mm format (e.g. 09:30)"),
   endTime: z.string().regex(timeStringRegex, "Time must be in HH:mm format (e.g. 11:00)"),
   room: z.string().trim().max(100).optional(),
-  type: z.enum(["lecture", "lab", "tutorial", "seminar", "workshop", "study"]).default("lecture"),
+  type: scheduleTypeEnum,
 });
 
 export const scheduleSlotSchema = baseScheduleSlotObject.refine(
@@ -71,7 +85,7 @@ export const createClassModalSchema = z
     daysOfWeek: z.array(z.number().int().min(1).max(7)).min(1, "Select at least one day"),
     startTime: z.string().regex(timeStringRegex, "Start time format must be HH:mm"),
     endTime: z.string().regex(timeStringRegex, "End time format must be HH:mm"),
-    type: z.enum(["lecture", "lab", "tutorial", "seminar", "workshop", "study"]).default("lecture"),
+    type: scheduleTypeEnum,
   })
   .refine(
     (data) => timeToMinutes(data.endTime) > timeToMinutes(data.startTime),

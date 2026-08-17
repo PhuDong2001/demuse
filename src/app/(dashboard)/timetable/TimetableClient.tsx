@@ -7,6 +7,7 @@ import { WeeklyTimetableGrid } from "@/components/timetable/WeeklyTimetableGrid"
 import { MobileDayAgenda } from "@/components/timetable/MobileDayAgenda";
 import { ClassFormModal } from "@/components/timetable/ClassFormModal";
 import { ShareModal } from "@/components/timetable/ShareModal";
+import { ImportCalendarModal } from "@/components/timetable/ImportCalendarModal";
 import { Button } from "@/components/ui/Button";
 import { Plus, Share, Search, Sliders, Calendar, Sparkles } from "reicon-react";
 import { getDemuseDayOfWeek, type ScheduleWithSubject } from "@/lib/time";
@@ -31,7 +32,7 @@ export function TimetableClient({
 }: TimetableClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   // Initial day from query params or current day
   const initialDay = Number(searchParams.get("day")) || getDemuseDayOfWeek(new Date());
@@ -55,6 +56,7 @@ export function TimetableClient({
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = React.useState<boolean>(false);
   const [isShareModalOpen, setIsShareModalOpen] = React.useState<boolean>(false);
+  const [isImportModalOpen, setIsImportModalOpen] = React.useState<boolean>(false);
   const [editingSchedule, setEditingSchedule] = React.useState<ScheduleWithSubject | null>(null);
   const [modalDefaultDay, setModalDefaultDay] = React.useState<number>(1);
 
@@ -153,6 +155,17 @@ export function TimetableClient({
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setIsImportModalOpen(true)}
+            className="gap-1.5 shadow-2xs"
+            title="Import from Google Calendar, Apple iCal, Outlook (.ics)"
+          >
+            <Calendar className="h-3.5 w-3.5" />
+            <span>{language === "vi" ? "Nhập lịch (.ics)" : "Import iCal"}</span>
+          </Button>
+
           <Button
             size="sm"
             variant="outline"
@@ -295,6 +308,14 @@ export function TimetableClient({
         isPublic={timetable.isPublic}
         shareToken={timetable.shareToken}
         onUpdate={() => router.refresh()}
+      />
+
+      {/* Import Calendar Modal (.ics) */}
+      <ImportCalendarModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        timetableId={timetable.id}
+        onSuccess={() => router.refresh()}
       />
     </div>
   );
