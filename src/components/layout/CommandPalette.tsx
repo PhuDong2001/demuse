@@ -154,6 +154,17 @@ export function CommandPalette({
         },
       },
       {
+        id: "nav-ai",
+        title: isVi ? "Đến Trợ lý AI (Groq)" : "Go to AI Assistant (Groq)",
+        shortcut: "A",
+        category: isVi ? "Điều hướng" : "Navigation",
+        icon: Sparkles,
+        perform: () => {
+          handleClose();
+          router.push("/ai");
+        },
+      },
+      {
         id: "nav-courses",
         title: isVi ? "Đến Quản lý môn học" : "Go to Courses",
         shortcut: "C",

@@ -30,6 +30,7 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
     { href: "/", label: t.today, icon: Sparkles },
     { href: "/timetable", label: t.timetable, icon: Calendar },
     { href: "/subjects", label: t.courses, icon: BookOpen },
+    { href: "/ai", label: t.aiAssistant, icon: Sparkles },
     { href: "/settings", label: t.settings, icon: Settings },
   ];
 

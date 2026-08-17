@@ -5,6 +5,7 @@ export interface TranslationSchema {
   today: string;
   timetable: string;
   courses: string;
+  aiAssistant: string;
   settings: string;
   addClass: string;
   quickAdd: string;
@@ -187,6 +188,7 @@ export const translations: Record<Language, TranslationSchema> = {
     today: "Hôm nay",
     timetable: "Lịch tuần",
     courses: "Môn học",
+    aiAssistant: "Trợ lý AI",
     settings: "Cài đặt",
     addClass: "Thêm tiết",
     quickAdd: "Thêm tiết nhanh",
@@ -365,6 +367,7 @@ export const translations: Record<Language, TranslationSchema> = {
     today: "Today",
     timetable: "Timetable",
     courses: "Courses",
+    aiAssistant: "AI Assistant",
     settings: "Settings",
     addClass: "Add Class",
     quickAdd: "Quick Add Class",
@@ -543,6 +546,7 @@ export const translations: Record<Language, TranslationSchema> = {
     today: "Aujourd'hui",
     timetable: "Emploi du temps",
     courses: "Cours",
+    aiAssistant: "Assistant IA",
     settings: "Paramètres",
     addClass: "Ajouter un cours",
     quickAdd: "Ajout rapide",
@@ -720,6 +724,7 @@ export const translations: Record<Language, TranslationSchema> = {
     today: "Heute",
     timetable: "Stundenplan",
     courses: "Kurse",
+    aiAssistant: "KI-Assistent",
     settings: "Einstellungen",
     addClass: "Kurs hinzufügen",
     quickAdd: "Schnell hinzufügen",
