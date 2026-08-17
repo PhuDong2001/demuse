@@ -80,13 +80,26 @@ Rules:
       })),
     ];
 
-    const candidateModels = [
+    let candidateModels = [
       "llama-3.1-8b-instant",
       "llama-3.3-70b-versatile",
-      "llama3-70b-8192",
-      "llama3-8b-8192",
-      "mixtral-8x7b-32768",
+      "gemma2-9b-it",
     ];
+
+    try {
+      const activeList = await groq.models.list();
+      if (activeList.data && activeList.data.length > 0) {
+        const activeIds = activeList.data.map((m) => m.id);
+        const validCandidates = candidateModels.filter((m) => activeIds.includes(m));
+        if (validCandidates.length > 0) {
+          candidateModels = validCandidates;
+        } else if (activeIds.length > 0) {
+          candidateModels = activeIds.slice(0, 3);
+        }
+      }
+    } catch {
+      // Use static fallback list
+    }
 
     let reply = "";
     let lastError: unknown = null;

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Plus, Sparkles, Logout, User, Calendar, BookOpen, Settings } from "reicon-react";
 import { RobotIcon } from "../ui/RobotIcon";
+import { AIAssistantModal } from "../ai/AIAssistantModal";
 import { Button } from "../ui/Button";
 import { logoutAction } from "@/actions/auth.actions";
 import { getInitials } from "@/lib/utils";
@@ -25,13 +26,13 @@ interface AppHeaderProps {
 export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = React.useState(false);
   const { language, setLanguage, t } = useLanguage();
 
   const navLinks = [
     { href: "/", label: t.today, icon: Sparkles },
     { href: "/timetable", label: t.timetable, icon: Calendar },
     { href: "/subjects", label: t.courses, icon: BookOpen },
-    { href: "/ai", label: t.aiAssistant, icon: RobotIcon },
     { href: "/settings", label: t.settings, icon: Settings },
   ];
 
@@ -91,6 +92,17 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Quick AI Assistant Trigger on Header */}
+          <button
+            type="button"
+            onClick={() => setIsAIModalOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100/80 text-amber-900 text-xs font-semibold transition-all cursor-pointer shadow-2xs group"
+            title="Open AI Assistant (Groq Llama 3.1)"
+          >
+            <RobotIcon className="h-3.5 w-3.5 text-amber-700 group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline">{t.aiAssistant}</span>
+          </button>
+
           {/* Quick Cmd+K Search Trigger */}
           <button
             type="button"
@@ -204,6 +216,13 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
           )}
         </div>
       </div>
+
+      {/* Quick AI Assistant Popup Modal */}
+      <AIAssistantModal
+        isOpen={isAIModalOpen}
+        onClose={() => setIsAIModalOpen(false)}
+        userName={user?.name}
+      />
     </header>
   );
 }
