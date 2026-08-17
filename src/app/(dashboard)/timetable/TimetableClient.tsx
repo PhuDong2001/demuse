@@ -8,8 +8,21 @@ import { MobileDayAgenda } from "@/components/timetable/MobileDayAgenda";
 import { ClassFormModal } from "@/components/timetable/ClassFormModal";
 import { ShareModal } from "@/components/timetable/ShareModal";
 import { ImportCalendarModal } from "@/components/timetable/ImportCalendarModal";
+import { ExportWallpaperModal } from "@/components/timetable/ExportWallpaperModal";
+import { TimetableManagerModal } from "@/components/timetable/TimetableManagerModal";
 import { Button } from "@/components/ui/Button";
-import { Plus, Share, Search, Sliders, Calendar, Sparkles } from "reicon-react";
+import {
+  Plus,
+  Share,
+  Search,
+  Sliders,
+  Calendar,
+  Sparkles,
+  Download,
+  AngleLeft,
+  AngleRight,
+  Folder,
+} from "reicon-react";
 import { getDemuseDayOfWeek, type ScheduleWithSubject } from "@/lib/time";
 import type { Subject, Timetable } from "@/db/schema";
 import {
@@ -21,12 +34,14 @@ import { useLanguage } from "@/lib/LanguageContext";
 
 interface TimetableClientProps {
   timetable: Timetable;
+  allTimetables?: Timetable[];
   subjects: Subject[];
   schedules: ScheduleWithSubject[];
 }
 
 export function TimetableClient({
   timetable,
+  allTimetables = [timetable],
   subjects,
   schedules,
 }: TimetableClientProps) {
@@ -57,6 +72,9 @@ export function TimetableClient({
   const [isAddModalOpen, setIsAddModalOpen] = React.useState<boolean>(false);
   const [isShareModalOpen, setIsShareModalOpen] = React.useState<boolean>(false);
   const [isImportModalOpen, setIsImportModalOpen] = React.useState<boolean>(false);
+  const [isExportModalOpen, setIsExportModalOpen] = React.useState<boolean>(false);
+  const [isManagerModalOpen, setIsManagerModalOpen] = React.useState<boolean>(false);
+  const [currentWeek, setCurrentWeek] = React.useState<number>(1);
   const [editingSchedule, setEditingSchedule] = React.useState<ScheduleWithSubject | null>(null);
   const [modalDefaultDay, setModalDefaultDay] = React.useState<number>(1);
 
@@ -145,16 +163,61 @@ export function TimetableClient({
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Timetable Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#f0eae1]">
-        <div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#1c1917]">
-            {timetable.name}
-          </h1>
-          <p className="text-xs text-[#78716c] mt-0.5">
-            {timetable.academicTerm || t.currentTerm} · {schedules.length} {t.weeklySessions}
-          </p>
+        <div className="flex items-start sm:items-center gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#1c1917]">
+                {timetable.name}
+              </h1>
+              <button
+                type="button"
+                onClick={() => setIsManagerModalOpen(true)}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-[#ded7c8] bg-white hover:bg-[#ede8dc] text-xs font-semibold text-[#57534e] transition-all cursor-pointer shadow-2xs"
+                title="Switch or manage multiple timetables"
+              >
+                <Folder className="h-3 w-3 text-[#854d0e]" />
+                <span>{allTimetables.length > 1 ? `${allTimetables.length} ${language === "vi" ? "lịch" : "timetables"}` : language === "vi" ? "Đổi lịch" : "Switch"}</span>
+              </button>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-[#78716c] mt-1">
+              <span>{timetable.academicTerm || t.currentTerm} · {schedules.length} {t.weeklySessions}</span>
+              <span className="text-[#ded7c8]">·</span>
+              {/* Week Navigator */}
+              <div className="inline-flex items-center gap-1 bg-[#ede8dc]/80 px-2 py-0.5 rounded-md text-[#1c1917] font-semibold select-none">
+                <button
+                  type="button"
+                  onClick={() => setCurrentWeek((w) => Math.max(w - 1, 1))}
+                  className="hover:text-[#854d0e] cursor-pointer p-0.5"
+                  title="Previous week"
+                >
+                  <AngleLeft className="h-3 w-3" />
+                </button>
+                <span>{language === "vi" ? `Tuần ${currentWeek}` : `Week ${currentWeek}`}</span>
+                <button
+                  type="button"
+                  onClick={() => setCurrentWeek((w) => w + 1)}
+                  className="hover:text-[#854d0e] cursor-pointer p-0.5"
+                  title="Next week"
+                >
+                  <AngleRight className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setIsExportModalOpen(true)}
+            className="gap-1.5 shadow-2xs"
+            title="Export lockscreen wallpaper, 16:9 desktop background or A4 print"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>{language === "vi" ? "Xuất ảnh" : "Export"}</span>
+          </Button>
+
           <Button
             size="sm"
             variant="outline"
@@ -163,7 +226,7 @@ export function TimetableClient({
             title="Import from Google Calendar, Apple iCal, Outlook (.ics)"
           >
             <Calendar className="h-3.5 w-3.5" />
-            <span>{language === "vi" ? "Nhập lịch (.ics)" : "Import iCal"}</span>
+            <span>{language === "vi" ? "Nhập lịch" : "Import"}</span>
           </Button>
 
           <Button
@@ -316,6 +379,22 @@ export function TimetableClient({
         onClose={() => setIsImportModalOpen(false)}
         timetableId={timetable.id}
         onSuccess={() => router.refresh()}
+      />
+
+      {/* Export Wallpaper Modal (Phone Lockscreen / Desktop / Print) */}
+      <ExportWallpaperModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        timetableName={timetable.name}
+        schedules={schedules}
+      />
+
+      {/* Timetable Manager Modal */}
+      <TimetableManagerModal
+        isOpen={isManagerModalOpen}
+        onClose={() => setIsManagerModalOpen(false)}
+        currentTimetableId={timetable.id}
+        allTimetables={allTimetables}
       />
     </div>
   );

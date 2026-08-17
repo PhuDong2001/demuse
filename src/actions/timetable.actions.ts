@@ -56,3 +56,11 @@ export async function deleteTimetableAction(timetableId: string) {
   revalidatePath("/");
   return { success: true };
 }
+
+export async function setDefaultTimetableAction(timetableId: string) {
+  const user = await requireAuth();
+  const updated = await updateTimetable(timetableId, user.id, { isDefault: true });
+  revalidatePath("/timetable");
+  revalidatePath("/");
+  return { success: true, timetable: updated };
+}

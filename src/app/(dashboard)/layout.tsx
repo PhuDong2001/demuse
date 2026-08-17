@@ -3,6 +3,7 @@ import { requireAuth } from "@/modules/auth/auth.guard";
 import { getDefaultTimetable } from "@/modules/timetables/timetables.service";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { CommandPalette } from "@/components/layout/CommandPalette";
 
 export default async function DashboardLayout({
   children,
@@ -22,6 +23,7 @@ export default async function DashboardLayout({
         {children}
       </main>
       <MobileBottomNav />
+      <CommandPalette />
     </div>
   );
 }

@@ -89,6 +89,27 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Quick Cmd+K Search Trigger */}
+          <button
+            type="button"
+            onClick={() => {
+              window.dispatchEvent(
+                new KeyboardEvent("keydown", {
+                  key: "k",
+                  metaKey: true,
+                  bubbles: true,
+                })
+              );
+            }}
+            className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-lg border border-[#ded7c8] bg-white hover:bg-[#ede8dc] text-xs text-[#78716c] hover:text-[#1c1917] transition-all cursor-pointer shadow-2xs"
+            title="Open Command Palette (Cmd + K / Ctrl + K)"
+          >
+            <span className="text-[11px] font-medium">{language === "vi" ? "Tìm kiếm..." : "Quick search..."}</span>
+            <kbd className="px-1.5 py-0.5 text-[9px] font-bold text-[#78716c] bg-[#ede8dc] rounded border border-[#ded7c8]">
+              ⌘K
+            </kbd>
+          </button>
+
           {/* 4-Language Switcher (VN, EN, FR, DE) */}
           <div className="flex items-center rounded-lg border border-[#ded7c8] bg-white p-0.5 text-[11px] font-semibold">
             {(["vi", "en", "fr", "de"] as const).map((code) => (
