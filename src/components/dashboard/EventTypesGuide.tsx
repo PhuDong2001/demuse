@@ -3,7 +3,20 @@
 import * as React from "react";
 import { CLASS_TYPES } from "@/lib/constants";
 import { useLanguage } from "@/lib/LanguageContext";
-import { Sparkles, Plus } from "reicon-react";
+import {
+  Sparkles,
+  Plus,
+  Book,
+  TestTube,
+  Briefcase,
+  Users,
+  Target,
+  Treadmill,
+  Teacher,
+  VoiceCricle,
+  Tuning,
+  type IconComponent,
+} from "reicon-react";
 
 interface EventTypesGuideProps {
   onSelectType?: (typeValue: string) => void;
@@ -11,70 +24,86 @@ interface EventTypesGuideProps {
 
 const EVENT_TYPE_DETAILS: Record<
   string,
-  { viLabel: string; viDesc: string; enDesc: string; iconEmoji: string; badgeColor: string }
+  {
+    viLabel: string;
+    viDesc: string;
+    enDesc: string;
+    Icon: IconComponent;
+    iconBg: string;
+    iconColor: string;
+  }
 > = {
   lecture: {
     viLabel: "Tiết lý thuyết",
     viDesc: "Tiết học lý thuyết, bài giảng trên lớp",
     enDesc: "Standard lecture or classroom instruction",
-    iconEmoji: "📚",
-    badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    Icon: Book,
+    iconBg: "bg-emerald-50 border-emerald-200",
+    iconColor: "text-emerald-700",
   },
   lab: {
     viLabel: "Thực hành / Lab",
     viDesc: "Phòng thí nghiệm, máy tính, thực hành",
     enDesc: "Hands-on laboratory or practical session",
-    iconEmoji: "🧪",
-    badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
+    Icon: TestTube,
+    iconBg: "bg-blue-50 border-blue-200",
+    iconColor: "text-blue-700",
   },
   work: {
     viLabel: "Ca làm việc / Trực ca",
     viDesc: "Ca làm việc tại công ty, trực ca bán thời gian",
     enDesc: "Work shift, job tasks, or company duties",
-    iconEmoji: "💼",
-    badgeColor: "bg-amber-50 text-amber-800 border-amber-200",
+    Icon: Briefcase,
+    iconBg: "bg-amber-50 border-amber-200",
+    iconColor: "text-amber-700",
   },
   meeting: {
     viLabel: "Họp nhóm / Khách hàng",
     viDesc: "Họp đồ án, họp nhóm, trao đổi đối tác",
     enDesc: "Team sync, group project, or client call",
-    iconEmoji: "👥",
-    badgeColor: "bg-purple-50 text-purple-800 border-purple-200",
+    Icon: Users,
+    iconBg: "bg-purple-50 border-purple-200",
+    iconColor: "text-purple-700",
   },
   study: {
     viLabel: "Tự học / Tập trung",
     viDesc: "Khung giờ học bài, làm đồ án sâu",
     enDesc: "Dedicated deep work or self-study block",
-    iconEmoji: "🎯",
-    badgeColor: "bg-rose-50 text-rose-800 border-rose-200",
+    Icon: Target,
+    iconBg: "bg-rose-50 border-rose-200",
+    iconColor: "text-rose-700",
   },
   personal: {
     viLabel: "Cá nhân / Thể thao",
     viDesc: "Tập gym, thể dục, sinh hoạt cá nhân",
     enDesc: "Workout, fitness, or personal habits",
-    iconEmoji: "🏃",
-    badgeColor: "bg-orange-50 text-orange-800 border-orange-200",
+    Icon: Treadmill,
+    iconBg: "bg-orange-50 border-orange-200",
+    iconColor: "text-orange-700",
   },
   tutorial: {
     viLabel: "Hướng dẫn / Bài tập",
     viDesc: "Buổi sửa bài tập, trợ giảng hướng dẫn",
     enDesc: "Discussion or problem-solving tutorial",
-    iconEmoji: "📝",
-    badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
+    Icon: Teacher,
+    iconBg: "bg-teal-50 border-teal-200",
+    iconColor: "text-teal-700",
   },
   seminar: {
     viLabel: "Hội thảo / Chuyên đề",
     viDesc: "Chuyên đề học thuật, báo cáo nghiên cứu",
     enDesc: "Academic seminar or keynote lecture",
-    iconEmoji: "🎙️",
-    badgeColor: "bg-indigo-50 text-indigo-800 border-indigo-200",
+    Icon: VoiceCricle,
+    iconBg: "bg-indigo-50 border-indigo-200",
+    iconColor: "text-indigo-700",
   },
   workshop: {
     viLabel: "Workshop / Kỹ năng",
     viDesc: "Khóa tập huấn kỹ năng thực chiến",
     enDesc: "Skill-building workshop or hackathon",
-    iconEmoji: "🛠️",
-    badgeColor: "bg-stone-100 text-stone-800 border-stone-300",
+    Icon: Tuning,
+    iconBg: "bg-stone-100 border-stone-300",
+    iconColor: "text-stone-700",
   },
 };
 
@@ -102,16 +131,18 @@ export function EventTypesGuide({ onSelectType }: EventTypesGuideProps) {
           : "Demuse supports tailored event categories to help balance classes, jobs, and personal routines:"}
       </p>
 
-      {/* Grid of types */}
+      {/* Grid of types with crisp Reicon icons */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-1">
         {CLASS_TYPES.map((ct) => {
           const detail = EVENT_TYPE_DETAILS[ct.value] || {
             viLabel: ct.label,
             viDesc: "",
             enDesc: "",
-            iconEmoji: "📌",
-            badgeColor: "bg-[#f5f1e9] text-[#1c1917] border-[#ded7c8]",
+            Icon: Book,
+            iconBg: "bg-[#f5f1e9] border-[#ded7c8]",
+            iconColor: "text-[#1c1917]",
           };
+          const IconComp = detail.Icon;
 
           return (
             <div
@@ -119,7 +150,11 @@ export function EventTypesGuide({ onSelectType }: EventTypesGuideProps) {
               onClick={() => onSelectType?.(ct.value)}
               className="flex items-start gap-2.5 p-2.5 rounded-xl border border-[#ded7c8]/80 bg-[#faf7f2]/50 hover:bg-white hover:border-[#1c1917]/30 hover:shadow-2xs transition-all cursor-pointer group select-none text-left"
             >
-              <span className="text-base shrink-0 select-none">{detail.iconEmoji}</span>
+              <div
+                className={`h-8 w-8 rounded-lg border flex items-center justify-center shrink-0 ${detail.iconBg} ${detail.iconColor} group-hover:scale-105 transition-transform`}
+              >
+                <IconComp className="h-4 w-4" />
+              </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-1">
                   <span className="text-xs font-semibold text-[#1c1917] truncate">
