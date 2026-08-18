@@ -35,15 +35,31 @@ export function DashboardClient({
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
   const [editingSchedule, setEditingSchedule] = React.useState<ScheduleWithSubject | null>(null);
   const [modalDefaultDay, setModalDefaultDay] = React.useState<number>(1);
+  const [modalInitialType, setModalInitialType] = React.useState<
+    "lecture" | "lab" | "tutorial" | "seminar" | "workshop" | "work" | "meeting" | "study" | "personal"
+  >("lecture");
 
   const todayNumber = getDemuseDayOfWeek(new Date());
   const todayClasses = schedules
     .filter((s) => s.dayOfWeek === todayNumber)
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-  const handleOpenAdd = (dayNum?: number) => {
+  const handleOpenAdd = (
+    dayNum?: number,
+    initialType?:
+      | "lecture"
+      | "lab"
+      | "tutorial"
+      | "seminar"
+      | "workshop"
+      | "work"
+      | "meeting"
+      | "study"
+      | "personal"
+  ) => {
     setEditingSchedule(null);
     setModalDefaultDay(dayNum || todayNumber);
+    setModalInitialType(initialType || "lecture");
     setIsAddModalOpen(true);
   };
 
@@ -125,7 +141,7 @@ export function DashboardClient({
           />
 
           {/* Event & Activity Types Quick Guide */}
-          <EventTypesGuide onSelectType={() => handleOpenAdd(todayNumber)} />
+          <EventTypesGuide onSelectType={(tVal) => handleOpenAdd(todayNumber, tVal as any)} />
         </div>
 
         {/* Weekly Workload Strip & Quick Info (1 col) */}
@@ -143,7 +159,7 @@ export function DashboardClient({
                   {t.publicBadge}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#f3efe6] px-2 py-0.5 text-[10px] font-semibold text-[#78716c]">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#ede8dc] px-2 py-0.5 text-[10px] font-semibold text-[#78716c] border border-[#ded7c8]">
                   {t.privateBadge}
                 </span>
               )}
@@ -180,6 +196,7 @@ export function DashboardClient({
         allSchedules={schedules}
         editingSchedule={editingSchedule}
         defaultDayOfWeek={modalDefaultDay}
+        initialType={modalInitialType}
         onSuccess={() => router.refresh()}
       />
     </div>

@@ -13,7 +13,16 @@ import { AlertTriangle } from "reicon-react";
 import type { Subject } from "@/db/schema";
 import { useLanguage } from "@/lib/LanguageContext";
 
-type ClassTypeEnum = "lecture" | "lab" | "tutorial" | "seminar" | "workshop" | "study";
+type ClassTypeEnum =
+  | "lecture"
+  | "lab"
+  | "tutorial"
+  | "seminar"
+  | "workshop"
+  | "work"
+  | "meeting"
+  | "study"
+  | "personal";
 
 export interface ClassFormModalProps {
   isOpen: boolean;
@@ -23,6 +32,7 @@ export interface ClassFormModalProps {
   allSchedules: ScheduleWithSubject[];
   editingSchedule?: ScheduleWithSubject | null;
   defaultDayOfWeek?: number;
+  initialType?: ClassTypeEnum;
   onSuccess?: () => void;
 }
 
@@ -33,6 +43,7 @@ interface FormInnerProps {
   allSchedules: ScheduleWithSubject[];
   editingSchedule?: ScheduleWithSubject | null;
   defaultDayOfWeek: number;
+  initialType?: ClassTypeEnum;
   onSuccess?: () => void;
 }
 
@@ -43,9 +54,11 @@ function ClassFormInner({
   allSchedules,
   editingSchedule,
   defaultDayOfWeek,
+  initialType = "lecture",
   onSuccess,
 }: FormInnerProps) {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const isVi = language === "vi";
   const isEditing = Boolean(editingSchedule);
 
   const [selectedSubjectId, setSelectedSubjectId] = React.useState<string>(
@@ -83,7 +96,7 @@ function ClassFormInner({
     editingSchedule ? editingSchedule.endTime : "10:30"
   );
   const [type, setType] = React.useState<ClassTypeEnum>(
-    editingSchedule ? (editingSchedule.type as ClassTypeEnum) : "lecture"
+    editingSchedule ? (editingSchedule.type as ClassTypeEnum) : initialType
   );
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -213,18 +226,85 @@ function ClassFormInner({
         </div>
       )}
 
-      {/* Existing Subject Quick Picker */}
+      {/* Event Category Type Selector Tabs */}
+      <div className="space-y-1.5 pb-2 border-b border-[#f0eae1]">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-[#57534e]">
+          {isVi ? "Mục tiêu / Loại hình hoạt động" : "Activity Category & Type"}
+        </label>
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
+          {CLASS_TYPES.map((ct) => {
+            const isSelected = type === ct.value;
+            const labelsMap: Record<string, { vi: string; en: string }> = {
+              lecture: { vi: "Lý thuyết", en: "Lecture" },
+              lab: { vi: "Thực hành", en: "Lab" },
+              tutorial: { vi: "Hướng dẫn", en: "Tutorial" },
+              seminar: { vi: "Chuyên đề", en: "Seminar" },
+              workshop: { vi: "Workshop", en: "Workshop" },
+              work: { vi: "Công việc", en: "Work" },
+              meeting: { vi: "Họp nhóm", en: "Meeting" },
+              study: { vi: "Tự học", en: "Study" },
+              personal: { vi: "Cá nhân", en: "Personal" },
+            };
+            const currentLabel = isVi ? labelsMap[ct.value]?.vi || ct.label : labelsMap[ct.value]?.en || ct.label;
+
+            return (
+              <button
+                key={ct.value}
+                type="button"
+                onClick={() => setType(ct.value as ClassTypeEnum)}
+                className={`py-1.5 px-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer text-center truncate ${
+                  isSelected
+                    ? "bg-[#1c1917] text-[#faf7f2] border-[#1c1917] shadow-xs"
+                    : "bg-white text-[#57534e] border-[#ded7c8] hover:border-[#b8ad96] hover:bg-[#faf7f2]"
+                }`}
+              >
+                {currentLabel}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Existing Item Quick Picker */}
       {!isEditing && existingSubjects.length > 0 && (
         <div className="space-y-1.5 pb-2 border-b border-[#f0eae1]">
           <label className="block text-xs font-semibold uppercase tracking-wider text-[#57534e]">
-            {t.selectExistingCourse}
+            {type === "work"
+              ? isVi
+                ? "Chọn dự án / công việc có sẵn"
+                : "Select Existing Job / Shift"
+              : type === "meeting"
+              ? isVi
+                ? "Chọn nhóm / dự án có sẵn"
+                : "Select Existing Project / Meeting"
+              : type === "personal"
+              ? isVi
+                ? "Chọn thói quen / hoạt động có sẵn"
+                : "Select Existing Activity"
+              : t.selectExistingCourse}
           </label>
           <select
             value={selectedSubjectId}
             onChange={(e) => handleSelectExistingSubject(e.target.value)}
             className="w-full rounded-lg border border-[#ded7c8] bg-white px-3 py-2 text-xs text-[#1c1917] focus:border-[#1c1917] focus:outline-none"
           >
-            <option value="">-- {t.orAddNewCourse} --</option>
+            <option value="">
+              --{" "}
+              {type === "work"
+                ? isVi
+                  ? "Tạo công việc / ca làm mới"
+                  : "Create new work shift"
+                : type === "meeting"
+                ? isVi
+                  ? "Tạo cuộc họp mới"
+                  : "Create new meeting"
+                : type === "personal"
+                ? isVi
+                  ? "Tạo hoạt động mới"
+                  : "Create new activity"
+                : t.orAddNewCourse}{" "}
+              --
+            </option>
             {existingSubjects.map((sub) => (
               <option key={sub.id} value={sub.id}>
                 {sub.code ? `[${sub.code}] ` : ""}
@@ -235,12 +315,48 @@ function ClassFormInner({
         </div>
       )}
 
-      {/* Subject Name & Code */}
+      {/* Dynamic Name & Code/Tag Fields based on Category */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-2">
           <Input
-            label={t.courseName}
-            placeholder="e.g. Data Structures & Algorithms"
+            label={
+              type === "work"
+                ? isVi
+                  ? "Tên công việc / Ca làm việc"
+                  : "Job Title / Work Shift Name"
+                : type === "meeting"
+                ? isVi
+                  ? "Chủ đề cuộc họp / Tên nhóm"
+                  : "Meeting Topic / Group Name"
+                : type === "study"
+                ? isVi
+                  ? "Mục tiêu / Nội dung tự học"
+                  : "Study Focus / Task Name"
+                : type === "personal"
+                ? isVi
+                  ? "Tên hoạt động / Thói quen"
+                  : "Activity / Habit Name"
+                : t.courseName
+            }
+            placeholder={
+              type === "work"
+                ? isVi
+                  ? "vd: Ca sáng Barista, Trực ca lập trình, Thiết kế UI..."
+                  : "e.g. Morning Shift, Frontend Dev, Support Desk..."
+                : type === "meeting"
+                ? isVi
+                  ? "vd: Họp đồ án tốt nghiệp, Đồng bộ Sprint tuần..."
+                  : "e.g. Thesis Sync, Weekly Standup, Client Pitch..."
+                : type === "study"
+                ? isVi
+                  ? "vd: Ôn luyện IELTS Reading, Làm bài tập Giải tích..."
+                  : "e.g. IELTS Reading, Deep Coding Session..."
+                : type === "personal"
+                ? isVi
+                  ? "vd: Tập Gym - Leg Day, Chạy bộ công viên, Đọc sách..."
+                  : "e.g. Gym Workout, Evening Run, Reading..."
+                : "e.g. Data Structures & Algorithms"
+            }
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoComplete="off"
@@ -251,8 +367,30 @@ function ClassFormInner({
         </div>
         <div>
           <Input
-            label={t.courseCode}
-            placeholder="e.g. CS 204"
+            label={
+              type === "work"
+                ? isVi
+                  ? "Mã ca / Dự án (tuỳ chọn)"
+                  : "Project / Job Code"
+                : type === "meeting"
+                ? isVi
+                  ? "Mã nhóm (tuỳ chọn)"
+                  : "Team / Project Code"
+                : type === "personal"
+                ? isVi
+                  ? "Nhãn / Tag (tuỳ chọn)"
+                  : "Tag / Label"
+                : t.courseCode
+            }
+            placeholder={
+              type === "work"
+                ? "e.g. PRJ-01"
+                : type === "meeting"
+                ? "e.g. TEAM-A"
+                : type === "personal"
+                ? "e.g. HEALTH"
+                : "e.g. CS 204"
+            }
             value={code}
             onChange={(e) => setCode(e.target.value)}
             autoComplete="off"
@@ -262,11 +400,39 @@ function ClassFormInner({
         </div>
       </div>
 
-      {/* Teacher & Room */}
+      {/* Dynamic Person In Charge & Venue/Location */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Input
-          label={t.instructor}
-          placeholder="e.g. Prof. Alan Miller"
+          label={
+            type === "work"
+              ? isVi
+                ? "Quản lý / Người phụ trách (tuỳ chọn)"
+                : "Manager / Supervisor (optional)"
+              : type === "meeting"
+              ? isVi
+                ? "Người chủ trì / Thành viên (tuỳ chọn)"
+                : "Host / Attendees (optional)"
+              : type === "study" || type === "personal"
+              ? isVi
+                ? "Người đồng hành / Huấn luyện viên (tuỳ chọn)"
+                : "Partner / Coach (optional)"
+              : t.instructor
+          }
+          placeholder={
+            type === "work"
+              ? isVi
+                ? "vd: Anh Minh (Team Lead)"
+                : "e.g. Alex (Team Lead)"
+              : type === "meeting"
+              ? isVi
+                ? "vd: Trưởng nhóm Đồ án"
+                : "e.g. Project Lead"
+              : type === "personal"
+              ? isVi
+                ? "vd: PT Nam hoặc Bạn tập"
+                : "e.g. Gym Partner / Coach"
+              : "e.g. Prof. Alan Miller"
+          }
           value={teacher}
           onChange={(e) => setTeacher(e.target.value)}
           autoComplete="off"
@@ -274,8 +440,36 @@ function ClassFormInner({
           spellCheck={false}
         />
         <Input
-          label={t.roomVenue}
-          placeholder="e.g. Hall 302 or Studio B"
+          label={
+            type === "work"
+              ? isVi
+                ? "Địa điểm làm việc / Chi nhánh / Link"
+                : "Workplace / Office / Remote Link"
+              : type === "meeting"
+              ? isVi
+                ? "Phòng họp / Link Google Meet"
+                : "Meeting Room / Google Meet Link"
+              : type === "personal"
+              ? isVi
+                ? "Địa điểm / Phòng tập"
+                : "Location / Fitness Center"
+              : t.roomVenue
+          }
+          placeholder={
+            type === "work"
+              ? isVi
+                ? "vd: Văn phòng Tầng 4 hoặc Remote Zoom"
+                : "e.g. 4th Floor Office or Remote"
+              : type === "meeting"
+              ? isVi
+                ? "vd: Phòng họp B2 hoặc meet.google.com/xyz"
+                : "e.g. Room B2 or Google Meet"
+              : type === "personal"
+              ? isVi
+                ? "vd: California Fitness hoặc Công viên"
+                : "e.g. Fitness Gym or Park"
+              : "e.g. Hall 302 or Studio B"
+          }
           value={room}
           onChange={(e) => setRoom(e.target.value)}
           autoComplete="off"
@@ -408,27 +602,42 @@ export function ClassFormModal({
   allSchedules,
   editingSchedule,
   defaultDayOfWeek = 1,
+  initialType = "lecture",
   onSuccess,
 }: ClassFormModalProps) {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const isVi = language === "vi";
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={editingSchedule ? t.editCourse : t.addNewClass}
-      description={t.configureClassTiming}
+      title={
+        editingSchedule
+          ? isVi
+            ? "Chỉnh sửa Lịch trình"
+            : "Edit Schedule Item"
+          : isVi
+          ? "Thêm Lịch trình Mới (Học tập & Công việc)"
+          : "Add New Event (Study, Work & Life)"
+      }
+      description={
+        isVi
+          ? "Thiết lập môn học, ca làm việc, cuộc họp hoặc thói quen cá nhân trong tuần."
+          : "Configure class, work shift, meeting, or personal routine in your weekly timetable."
+      }
       maxWidth="lg"
     >
       {isOpen && (
         <ClassFormInner
-          key={editingSchedule ? editingSchedule.id : "new"}
+          key={editingSchedule ? editingSchedule.id : `new-${initialType}-${defaultDayOfWeek}`}
           onClose={onClose}
           timetableId={timetableId}
           existingSubjects={existingSubjects}
           allSchedules={allSchedules}
           editingSchedule={editingSchedule}
           defaultDayOfWeek={defaultDayOfWeek}
+          initialType={initialType}
           onSuccess={onSuccess}
         />
       )}
