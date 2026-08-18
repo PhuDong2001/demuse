@@ -32,6 +32,7 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
   const navLinks = [
     { href: "/", label: t.today, icon: Sparkles },
     { href: "/timetable", label: t.timetable, icon: Calendar },
+    { href: "/ai", label: t.aiAssistant, icon: RobotVectorIcon },
     { href: "/subjects", label: t.courses, icon: BookOpen },
     { href: "/settings", label: t.settings, icon: Settings },
   ];
@@ -92,17 +93,6 @@ export function AppHeader({ user, academicTerm, onOpenAddModal }: AppHeaderProps
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-2.5">
-          {/* Quick AI Assistant Trigger on Header */}
-          <button
-            type="button"
-            onClick={() => setIsAIModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[#ded7c8] bg-white hover:bg-[#ede8dc] text-[#1c1917] text-xs font-semibold transition-all cursor-pointer shadow-2xs group"
-            title="Open AI Assistant (Groq Llama 3.1)"
-          >
-            <RobotVectorIcon className="h-4 w-4 text-[#854d0e] group-hover:scale-110 transition-transform" />
-            <span className="hidden sm:inline">{t.aiAssistant}</span>
-          </button>
-
           {/* Quick Cmd+K Search Trigger */}
           <button
             type="button"
