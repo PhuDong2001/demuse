@@ -15,64 +15,65 @@ export function LandingPageClient() {
     <div className="min-h-screen flex flex-col bg-[#faf7f2] text-[#1c1917] overflow-x-hidden">
       {/* Header */}
       <header className="border-b border-[#e8e1d5] bg-[#faf7f2]/95 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-4">
           {/* Logo & Brand */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-            <div className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-xl overflow-hidden shadow-xs border border-[#ded7c8] bg-[#1c1917] flex items-center justify-center shrink-0">
+          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
+            <div className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-lg overflow-hidden shadow-2xs border border-[#ded7c8] bg-[#1c1917] flex items-center justify-center shrink-0">
               <Image
                 src="/demuse_logo.png"
                 alt="Demuse Logo"
-                width={36}
-                height={36}
+                width={32}
+                height={32}
                 className="object-cover h-full w-full"
                 priority
               />
             </div>
-            <span className="font-serif text-lg sm:text-2xl font-medium tracking-tight text-[#1c1917] leading-none">
+            <span className="font-serif text-lg sm:text-xl font-medium tracking-tight text-[#1c1917] leading-none">
               Demuse
             </span>
           </Link>
 
-          {/* Navigation & Language Toggle */}
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          {/* Navigation & Actions */}
+          <div className="flex items-center gap-1 sm:gap-2.5">
+            {/* About Link (hidden on small phone, visible on tablet+) */}
             <Link
               href="/about"
-              className="text-xs font-semibold text-[#57534e] hover:text-[#1c1917] px-2 sm:px-3 py-1.5 rounded-lg hover:bg-[#ede8dc] transition-all"
+              className="hidden sm:inline-block text-xs font-semibold text-[#57534e] hover:text-[#1c1917] px-2.5 py-1 rounded-lg hover:bg-[#ede8dc] transition-all"
             >
               {isVi ? "Giới thiệu" : "About"}
             </Link>
 
             {/* 4-Language Switcher */}
-            <div className="flex items-center rounded-lg border border-[#ded7c8] bg-white p-0.5 text-[11px] sm:text-xs font-semibold shrink-0">
+            <div className="flex items-center rounded-lg border border-[#ded7c8] bg-white p-0.5 text-[10px] sm:text-xs font-semibold shrink-0">
               {(["vi", "en", "fr", "de"] as const).map((code) => (
                 <button
                   key={code}
                   type="button"
                   onClick={() => setLanguage(code)}
-                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded cursor-pointer transition-all ${
+                  className={`px-1.5 sm:px-2 py-0.5 rounded cursor-pointer transition-all ${
                     language === code
                       ? "bg-[#1c1917] text-[#faf7f2] shadow-2xs"
                       : "text-[#78716c] hover:text-[#1c1917]"
                   }`}
                 >
-                  <span className="sm:hidden uppercase">{code === "vi" ? "VN" : code}</span>
-                  <span className="hidden sm:inline">
-                    {code === "vi" ? "Tiếng Việt" : code === "en" ? "English" : code === "fr" ? "Français" : "Deutsch"}
-                  </span>
+                  <span className="uppercase">{code === "vi" ? "VN" : code.toUpperCase()}</span>
                 </button>
               ))}
             </div>
 
+            {/* Sign In Link */}
             <Link
               href="/login"
-              className="text-xs font-semibold text-[#57534e] hover:text-[#1c1917] px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-[#ede8dc] transition-all shrink-0"
+              className="text-[11px] sm:text-xs font-semibold text-[#57534e] hover:text-[#1c1917] px-1.5 sm:px-2.5 py-1 rounded-lg hover:bg-[#ede8dc] transition-all shrink-0"
             >
               {t.signIn}
             </Link>
 
+            {/* Get Started Button */}
             <Link href="/register" className="shrink-0">
-              <Button size="sm" variant="primary" className="gap-1 sm:gap-1.5 shadow-xs px-2.5 sm:px-3 py-1 text-xs">
-                <span>{t.getStarted}</span>
+              <Button size="sm" variant="primary" className="gap-1 sm:gap-1.5 shadow-2xs px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-xs font-medium h-8 sm:h-9">
+                <span className="hidden xs:inline">{t.getStarted}</span>
+                <span className="xs:hidden">{isVi ? "Bắt đầu" : "Start"}</span>
                 <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               </Button>
             </Link>

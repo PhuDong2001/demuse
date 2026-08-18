@@ -52,6 +52,7 @@ export const viewport: Viewport = {
 };
 
 import { LanguageProvider } from "@/lib/LanguageContext";
+import { SystemAnnouncementModal } from "@/components/common/SystemAnnouncementModal";
 
 export default function RootLayout({
   children,
@@ -68,6 +69,7 @@ export default function RootLayout({
       <body className="font-sans antialiased min-h-screen bg-[#faf7f2] text-[#1c1917] flex flex-col selection:bg-[#ded7c8] selection:text-[#1c1917]">
         <LanguageProvider>
           {children}
+          <SystemAnnouncementModal />
         </LanguageProvider>
         <Analytics />
         <script
